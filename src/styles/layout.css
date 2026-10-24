@@ -32,11 +32,11 @@
   font-weight: 800;
   font-size: 17px;
   letter-spacing: -0.02em;
-  transition: border-radius var(--dur-medium) var(--ease-spring);
+  transition: color var(--dur-medium) var(--ease-standard);
 }
 
 .brand:hover {
-  border-radius: var(--shape-md);
+  color: var(--md-sys-color-primary);
 }
 
 .brand-mark {
@@ -47,7 +47,7 @@
   border-radius: 50%;
   background: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
-  transition: transform var(--dur-xlong) var(--ease-spring), border-radius var(--dur-medium) var(--ease-spring);
+  transition: transform var(--dur-xlong) var(--ease-spring);
 }
 
 .brand-mark svg {
@@ -58,7 +58,6 @@
 
 .brand:hover .brand-mark {
   transform: rotate(120deg);
-  border-radius: 34%;
 }
 
 .brand-tld {
@@ -83,11 +82,10 @@
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
-  transition: border-radius var(--dur-medium) var(--ease-spring), background-color var(--dur-medium) var(--ease-standard);
+  transition: background-color var(--dur-medium) var(--ease-standard);
 }
 
 .telemetry-chip:hover {
-  border-radius: var(--shape-md);
   background: var(--md-sys-color-surface-container-highest);
 }
 

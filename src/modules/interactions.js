@@ -130,7 +130,7 @@ export class InteractionsManager {
   initLetterHover() {
     const displayName = document.getElementById('display-name')
     if (!displayName) return
-    const rawText = displayName.textContent || 'Radioactiverm'
+    const rawText = (displayName.textContent || 'Radioactiverm').trim()
     displayName.innerHTML = rawText
       .split('')
       .map((ch, idx) => `<span class="letter" style="--li:${idx}">${ch}</span>`)

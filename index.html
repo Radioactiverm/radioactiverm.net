@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Radioactiverm · Tobiáš — Homelab, Hardware &amp; Web Developer</title>
-    <meta name="description" content="Radioactiverm (Tobiáš) — junior developer from the Czech Republic building automation, apps and websites. Proxmox homelab, ESP32 &amp; WLED hardware, Home Assistant integrations and KdeJeBus.cz." />
+    <title>Radioactiverm — Homelab, Hardware &amp; Web Developer</title>
+    <meta name="description" content="Radioactiverm — junior developer from the Czech Republic building automation, apps and websites. Proxmox homelab, ESP32 &amp; WLED hardware, Home Assistant integrations and KdeJeBus.cz." />
     <meta name="author" content="Radioactiverm" />
     <meta name="theme-color" content="#0a1000" />
     <meta name="color-scheme" content="dark light" />
@@ -13,13 +13,13 @@
     <meta property="og:type" content="profile" />
     <meta property="og:url" content="https://radioactiverm.net/" />
     <meta property="og:site_name" content="radioactiverm.net" />
-    <meta property="og:title" content="Radioactiverm · Tobiáš" />
+    <meta property="og:title" content="Radioactiverm" />
     <meta property="og:description" content="Homelab, hardware and web — automation, apps and websites from the Czech Republic." />
     <meta property="og:image" content="https://avatars.githubusercontent.com/u/76690913?v=4" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="cs_CZ" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Radioactiverm · Tobiáš" />
+    <meta name="twitter:title" content="Radioactiverm" />
     <meta name="twitter:description" content="Homelab, hardware and web — automation, apps and websites from the Czech Republic." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -31,8 +31,7 @@
       {
         "@context": "https://schema.org",
         "@type": "Person",
-        "name": "Tobiáš",
-        "alternateName": "Radioactiverm",
+        "name": "Radioactiverm",
         "url": "https://radioactiverm.net",
         "image": "https://avatars.githubusercontent.com/u/76690913?v=4",
         "email": "mailto:me@radioactiverm.net",
@@ -122,7 +121,7 @@
             <svg class="avatar-halo" viewBox="0 0 200 200" aria-hidden="true"><path id="avatar-halo-path" d="" /></svg>
             <svg class="avatar-ring" viewBox="0 0 200 200" aria-hidden="true">
               <defs><path id="avatar-ring-path" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" /></defs>
-              <text><textPath href="#avatar-ring-path" textLength="520" lengthAdjust="spacing">RADIOACTIVERM · TOBIÁŠ · HOMELAB · HARDWARE · WEB · </textPath></text>
+              <text><textPath href="#avatar-ring-path" textLength="520" lengthAdjust="spacing">RADIOACTIVERM · HOMELAB · HARDWARE · WEB · AUTOMATION · </textPath></text>
             </svg>
             <img class="avatar" id="avatar" src="https://avatars.githubusercontent.com/u/76690913?v=4" alt="Radioactiverm" width="160" height="160" fetchpriority="high" decoding="async" />
             <span class="avatar-status" id="avatar-status" aria-hidden="true"></span>
@@ -131,8 +130,6 @@
             <p class="eyebrow mono" data-i18n="profile.hello">Hi, I'm</p>
             <h1 class="display-name" id="display-name">Radioactiverm</h1>
             <p class="profile-sub">
-              <span class="profile-real-name">Tobiáš</span>
-              <span class="profile-sep" aria-hidden="true">·</span>
               <span data-i18n="profile.role">Junior developer</span>
               <span class="profile-sep" aria-hidden="true">·</span>
               <span class="profile-loc"><span class="ms" aria-hidden="true">location_on</span><span data-i18n="profile.location">Czech Republic</span></span>
@@ -256,6 +253,11 @@
           <button type="button" class="play-btn sl ripple" id="btn-play" data-i18n-label="player.play" aria-label="Play"><span class="ms" id="play-icon" aria-hidden="true">play_arrow</span></button>
           <button type="button" class="icon-btn icon-btn-tonal sl ripple" id="btn-next" data-i18n-label="player.next" aria-label="Next track"><span class="ms" aria-hidden="true">skip_next</span></button>
         </div>
+        <div class="player-volume">
+          <button type="button" class="icon-btn icon-btn-sm sl ripple" id="btn-mute" aria-label="Toggle mute"><span class="ms" id="volume-icon" aria-hidden="true">volume_up</span></button>
+          <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.8" aria-label="Volume" />
+          <span class="mono volume-val" id="volume-val">80%</span>
+        </div>
         <audio id="audio" preload="none"></audio>
       </article>
 
@@ -331,7 +333,7 @@
     <footer class="site-footer" id="site-footer">
       <div class="footer-big" aria-hidden="true">radioactiverm</div>
       <div class="footer-row">
-        <span>© <span id="footer-year">2026</span> Tobiáš · <span data-i18n="footer.made">Built with Vite &amp; Material 3 Expressive</span></span>
+        <span>© <span id="footer-year">2026</span> Radioactiverm · <span data-i18n="footer.made">Built with Vite &amp; Material 3 Expressive</span></span>
         <span class="footer-meta">
           <a href="https://github.com/Radioactiverm/radioactiverm.net" target="_blank" rel="noopener noreferrer" data-i18n="footer.source">Source</a>
           <a href="mailto:me@radioactiverm.net">me@radioactiverm.net</a>

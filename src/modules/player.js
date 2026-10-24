@@ -17,6 +17,10 @@ export class MusicPlayer {
     this.btnPlay = document.getElementById('btn-play')
     this.playIcon = document.getElementById('play-icon')
     this.btnNext = document.getElementById('btn-next')
+    this.btnMute = document.getElementById('btn-mute')
+    this.volumeIcon = document.getElementById('volume-icon')
+    this.volumeSlider = document.getElementById('volume-slider')
+    this.volumeVal = document.getElementById('volume-val')
     this.audio = document.getElementById('audio')
 
     this.playlist = []
@@ -25,13 +29,68 @@ export class MusicPlayer {
     this.phase = 0
     this.animFrameId = null
     this.coverUrl = null
+    this.savedVolume = 0.8
 
     this.init()
   }
 
   async init() {
+    this.initVolume()
     this.bindEvents()
     await this.loadPlaylist()
+  }
+
+  initVolume() {
+    let vol = 0.8
+    try {
+      const stored = localStorage.getItem('rm:player:volume')
+      if (stored !== null && !isNaN(Number(stored))) {
+        vol = Math.max(0, Math.min(1, Number(stored)))
+      }
+    } catch {}
+    this.savedVolume = vol > 0 ? vol : 0.8
+    this.setVolume(vol, false)
+  }
+
+  setVolume(val, persist = true) {
+    const clamped = Math.max(0, Math.min(1, Number(val)))
+    if (this.audio) {
+      this.audio.volume = clamped
+    }
+    if (this.volumeSlider) {
+      this.volumeSlider.value = clamped.toString()
+      this.volumeSlider.style.setProperty('--volume-pct', `${Math.round(clamped * 100)}%`)
+    }
+    if (this.volumeVal) {
+      this.volumeVal.textContent = `${Math.round(clamped * 100)}%`
+    }
+    if (this.volumeIcon) {
+      if (clamped === 0) {
+        this.volumeIcon.textContent = 'volume_off'
+      } else if (clamped < 0.5) {
+        this.volumeIcon.textContent = 'volume_down'
+      } else {
+        this.volumeIcon.textContent = 'volume_up'
+      }
+    }
+    if (clamped > 0) {
+      this.savedVolume = clamped
+    }
+    if (persist) {
+      try {
+        localStorage.setItem('rm:player:volume', clamped.toString())
+      } catch {}
+    }
+  }
+
+  toggleMute() {
+    if (!this.audio) return
+    if (this.audio.volume > 0) {
+      this.savedVolume = this.audio.volume
+      this.setVolume(0)
+    } else {
+      this.setVolume(this.savedVolume || 0.8)
+    }
   }
 
   async loadPlaylist() {
@@ -186,9 +245,9 @@ export class MusicPlayer {
 
     const splitX = Math.max(0, Math.min(width, (percent / 100) * width))
 
-    const step = 4
-    const amplitude = this.isPlaying ? 4 : 2
-    const wavelength = 24
+    const step = 3
+    const amplitude = this.isPlaying ? 2.2 : 0
+    const wavelength = 40
 
     let activePath = `M 0 ${midY}`
     for (let x = 0; x <= splitX; x += step) {
@@ -216,7 +275,7 @@ export class MusicPlayer {
   startWaveAnimation() {
     if (this.animFrameId) return
     const loop = () => {
-      this.phase += 0.08
+      this.phase += 0.02
       if (this.audio && this.audio.duration) {
         const pct = (this.audio.currentTime / this.audio.duration) * 100
         this.updateWavy(pct)
@@ -256,6 +315,16 @@ export class MusicPlayer {
 
     if (this.btnPrev) {
       this.btnPrev.addEventListener('click', () => this.loadTrack(this.currentIndex - 1))
+    }
+
+    if (this.volumeSlider) {
+      this.volumeSlider.addEventListener('input', e => {
+        this.setVolume(parseFloat(e.target.value))
+      })
+    }
+
+    if (this.btnMute) {
+      this.btnMute.addEventListener('click', () => this.toggleMute())
     }
 
     if (this.audio) {

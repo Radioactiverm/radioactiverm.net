@@ -189,11 +189,12 @@
 
 .display-name {
   margin: 2px 0 10px;
-  font-size: clamp(38px, 5.4vw, 68px);
+  font-size: clamp(24px, 3.2vw, 48px);
   font-weight: 800;
-  letter-spacing: -0.05em;
-  line-height: 0.95;
-  overflow-wrap: anywhere;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: visible;
 }
 
 .display-name .letter {
@@ -228,11 +229,6 @@
   font-size: 15px;
   font-weight: 550;
   color: var(--md-sys-color-on-surface-variant);
-}
-
-.profile-real-name {
-  color: var(--md-sys-color-on-surface);
-  font-weight: 700;
 }
 
 .profile-sep {
@@ -728,12 +724,11 @@
   place-items: center;
   width: 72px;
   height: 64px;
-  border-radius: 32px;
+  border-radius: var(--shape-full);
   background: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);
   transition:
     width var(--dur-long) var(--ease-spring),
-    border-radius var(--dur-long) var(--ease-spring),
     transform var(--dur-medium) var(--ease-spring),
     background-color var(--dur-medium) var(--ease-standard);
 }
@@ -749,7 +744,82 @@
 
 .card-player[data-state='playing'] .play-btn {
   width: 96px;
-  border-radius: var(--shape-lg);
+}
+
+.player-volume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 4px 6px 0;
+}
+
+.player-volume .icon-btn-sm {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.player-volume .icon-btn-sm .ms {
+  font-size: 20px;
+}
+
+.volume-slider {
+  --volume-pct: 80%;
+  flex: 1;
+  height: 6px;
+  border-radius: var(--shape-full);
+  appearance: none;
+  -webkit-appearance: none;
+  background: linear-gradient(
+    to right,
+    var(--md-sys-color-primary) 0%,
+    var(--md-sys-color-primary) var(--volume-pct),
+    var(--md-sys-color-surface-container-highest) var(--volume-pct),
+    var(--md-sys-color-surface-container-highest) 100%
+  );
+  outline: none;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+  border: 2px solid var(--md-sys-color-surface);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+  transition: transform var(--dur-short) var(--ease-spring);
+  cursor: pointer;
+}
+
+.volume-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+  border: 2px solid var(--md-sys-color-surface);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+  transition: transform var(--dur-short) var(--ease-spring);
+  cursor: pointer;
+}
+
+.volume-slider:hover::-moz-range-thumb {
+  transform: scale(1.2);
+}
+
+.volume-val {
+  min-width: 38px;
+  font-size: 12px;
+  text-align: right;
+  color: var(--md-sys-color-on-surface-variant);
 }
 
 .facts {
