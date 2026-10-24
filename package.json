@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "sync-music": "node scripts/sync-music.js",
+    "sync-yt": "node scripts/sync-yt-music.js",
     "predev": "node scripts/sync-music.js",
     "prebuild": "node scripts/sync-music.js"
   },

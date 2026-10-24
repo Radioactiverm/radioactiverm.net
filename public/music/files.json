@@ -1,7 +1,19 @@
 [
   {
+    "file": "священная война.mp3",
+    "bpm": 75
+  },
+  {
     "file": "фруктовый 1.0.m4a",
     "bpm": 136
+  },
+  {
+    "file": "vlone (slowed).opus",
+    "bpm": 130
+  },
+  {
+    "file": "superswag pt. 1.opus",
+    "bpm": 81
   },
   {
     "file": "Cachalot (Slowed).opus",
@@ -10,17 +22,5 @@
   {
     "file": "ex-freundin (slowed + instrumental).opus",
     "bpm": 130
-  },
-  {
-    "file": "superswag pt. 1.opus",
-    "bpm": 81
-  },
-  {
-    "file": "vlone (slowed).opus",
-    "bpm": 130
-  },
-  {
-    "file": "священная война.mp3",
-    "bpm": 75
   }
 ]
