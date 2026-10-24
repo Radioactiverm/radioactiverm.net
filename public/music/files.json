@@ -1,7 +1,22 @@
 [
-  "фруктовый 1.0.m4a",
-  "Cachalot (Slowed).opus",
-  "ex-freundin (slowed + instrumental).opus",
-  "superswag pt. 1.opus",
-  "vlone (slowed).opus"
+  {
+    "file": "фруктовый 1.0.m4a",
+    "bpm": 136
+  },
+  {
+    "file": "Cachalot (Slowed).opus",
+    "bpm": 68
+  },
+  {
+    "file": "ex-freundin (slowed + instrumental).opus",
+    "bpm": 130
+  },
+  {
+    "file": "superswag pt. 1.opus",
+    "bpm": 81
+  },
+  {
+    "file": "vlone (slowed).opus",
+    "bpm": 130
+  }
 ]

@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync-music": "node scripts/sync-music.js",
+    "predev": "node scripts/sync-music.js",
+    "prebuild": "node scripts/sync-music.js"
   },
   "devDependencies": {
     "vite": "^8.3.5"

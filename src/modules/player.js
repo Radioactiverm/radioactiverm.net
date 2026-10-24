@@ -31,6 +31,7 @@ export class MusicPlayer {
     this.coverCache = new Map()
     this.coverUrl = null
     this.savedVolume = 0.8
+    this.currentBpm = 120
 
     this.init()
   }
@@ -121,17 +122,111 @@ export class MusicPlayer {
     this.loadTrack(0, false)
   }
 
+  getTrackFile(item) {
+    if (!item) return ''
+    return typeof item === 'string' ? item : item.file || ''
+  }
+
+  getTrackBpm(item) {
+    if (typeof item === 'object' && item && item.bpm) {
+      return Number(item.bpm)
+    }
+    return null
+  }
+
   getCoverUrl(filename) {
     const base = filename.replace(/\.[^/.]+$/, '')
     return encodeURI(`/music/covers/${base}.jpg`)
   }
 
   preloadCovers() {
-    for (const file of this.playlist) {
+    for (const item of this.playlist) {
+      const file = this.getTrackFile(item)
+      if (!file) continue
       const url = this.getCoverUrl(file)
       const img = new Image()
       img.src = url
       this.coverCache.set(file, url)
+    }
+  }
+
+  applyBpm(bpm) {
+    const safeBpm = Math.max(50, Math.min(220, Number(bpm) || 120))
+    this.currentBpm = safeBpm
+    const beatSec = 60 / safeBpm
+    const morphDur = (beatSec * 16).toFixed(2) + 's'
+    const spinDur = (beatSec * 32).toFixed(2) + 's'
+
+    const anim = document.getElementById('m3-morph-anim')
+    if (anim) {
+      anim.setAttribute('dur', morphDur)
+      if (this.isPlaying && typeof anim.beginElement === 'function') {
+        try {
+          anim.beginElement()
+        } catch {}
+      }
+    }
+
+    if (this.cover) {
+      this.cover.style.setProperty('--cover-spin-dur', spinDur)
+    }
+  }
+
+  async detectBpm(url) {
+    try {
+      const res = await fetch(url)
+      const arrayBuffer = await res.arrayBuffer()
+      const AudioCtx = window.AudioContext || window.webkitAudioContext
+      if (!AudioCtx) return 120
+      const audioCtx = new AudioCtx()
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer)
+      const channelData = audioBuffer.getChannelData(0)
+      const sampleRate = audioBuffer.sampleRate
+
+      const step = Math.floor(sampleRate / 100)
+      const len = Math.min(channelData.length, sampleRate * 45)
+      const energy = []
+      for (let i = 0; i < len; i += step) {
+        let sum = 0
+        for (let j = 0; j < step && i + j < len; j++) {
+          sum += channelData[i + j] * channelData[i + j]
+        }
+        energy.push(sum / step)
+      }
+
+      const diffs = [0]
+      for (let i = 1; i < energy.length; i++) {
+        const d = energy[i] - energy[i - 1]
+        diffs.push(d > 0 ? d : 0)
+      }
+
+      const mean = diffs.reduce((a, b) => a + b, 0) / diffs.length
+      const flux = diffs.map(d => Math.max(0, d - mean))
+
+      const frameRate = sampleRate / step
+      const minBpm = 60
+      const maxBpm = 180
+      const minLag = Math.floor((frameRate * 60) / maxBpm)
+      const maxLag = Math.floor((frameRate * 60) / minBpm)
+
+      let bestCorr = 0
+      let bestLag = minLag
+      for (let lag = minLag; lag <= maxLag; lag++) {
+        let corr = 0
+        for (let i = lag; i < flux.length; i++) {
+          corr += flux[i] * flux[i - lag]
+        }
+        if (corr > bestCorr) {
+          bestCorr = corr
+          bestLag = lag
+        }
+      }
+
+      const bpm = Math.round((frameRate * 60) / bestLag)
+      audioCtx.close().catch(() => {})
+      return bpm >= 60 && bpm <= 200 ? bpm : 120
+    } catch {
+      return 120
     }
   }
 
@@ -148,7 +243,8 @@ export class MusicPlayer {
   loadTrack(index, autoPlay = true) {
     if (this.playlist.length === 0) return
     this.currentIndex = (index + this.playlist.length) % this.playlist.length
-    const file = this.playlist[this.currentIndex]
+    const item = this.playlist[this.currentIndex]
+    const file = this.getTrackFile(item)
 
     if (this.trackIndexEl) {
       const currentPad = String(this.currentIndex + 1).padStart(2, '0')
@@ -171,6 +267,17 @@ export class MusicPlayer {
       this.coverImg.onerror = () => {
         this.extractCover(encoded)
       }
+    }
+
+    const explicitBpm = this.getTrackBpm(item)
+    if (explicitBpm) {
+      this.applyBpm(explicitBpm)
+    } else {
+      this.detectBpm(encoded).then(bpm => {
+        if (this.playlist[this.currentIndex] === item) {
+          this.applyBpm(bpm)
+        }
+      })
     }
 
     if (autoPlay) {

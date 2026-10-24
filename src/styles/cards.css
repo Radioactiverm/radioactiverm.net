@@ -582,7 +582,7 @@
 .card-player[data-state='playing'] .cover {
   clip-path: url(#m3-album-clip);
   border-radius: 0;
-  animation: m3-cover-spin 26s linear infinite;
+  animation: m3-cover-spin var(--cover-spin-dur, 26s) linear infinite;
 }
 
 @keyframes m3-cover-spin {
