@@ -28,6 +28,7 @@ export class MusicPlayer {
     this.isPlaying = false
     this.phase = 0
     this.animFrameId = null
+    this.coverCache = new Map()
     this.coverUrl = null
     this.savedVolume = 0.8
 
@@ -37,6 +38,10 @@ export class MusicPlayer {
   async init() {
     this.initVolume()
     this.bindEvents()
+    const svg = document.getElementById('m3-album-svg')
+    if (svg && typeof svg.pauseAnimations === 'function') {
+      svg.pauseAnimations()
+    }
     await this.loadPlaylist()
   }
 
@@ -100,9 +105,8 @@ export class MusicPlayer {
       const files = await res.json()
       if (Array.isArray(files) && files.length > 0) {
         this.playlist = files
-        this.loadTrack(0, false)
       } else {
-        this.setTrackTitle('No music available')
+        throw new Error('empty')
       }
     } catch {
       this.playlist = [
@@ -112,7 +116,22 @@ export class MusicPlayer {
         'superswag pt. 1.opus',
         'vlone (slowed).opus'
       ]
-      this.loadTrack(0, false)
+    }
+    this.preloadCovers()
+    this.loadTrack(0, false)
+  }
+
+  getCoverUrl(filename) {
+    const base = filename.replace(/\.[^/.]+$/, '')
+    return encodeURI(`/music/covers/${base}.jpg`)
+  }
+
+  preloadCovers() {
+    for (const file of this.playlist) {
+      const url = this.getCoverUrl(file)
+      const img = new Image()
+      img.src = url
+      this.coverCache.set(file, url)
     }
   }
 
@@ -145,7 +164,14 @@ export class MusicPlayer {
       this.audio.load()
     }
 
-    this.extractCover(encoded)
+    const coverUrl = this.coverCache.get(file) || this.getCoverUrl(file)
+    if (this.coverImg) {
+      this.coverImg.src = coverUrl
+      this.coverImg.hidden = false
+      this.coverImg.onerror = () => {
+        this.extractCover(encoded)
+      }
+    }
 
     if (autoPlay) {
       this.play()
@@ -192,6 +218,10 @@ export class MusicPlayer {
           this.isPlaying = true
           this.updateState()
           this.startWaveAnimation()
+          const svg = document.getElementById('m3-album-svg')
+          if (svg && typeof svg.unpauseAnimations === 'function') {
+            svg.unpauseAnimations()
+          }
         })
         .catch(() => {
           this.isPlaying = false
@@ -206,6 +236,10 @@ export class MusicPlayer {
     this.isPlaying = false
     this.updateState()
     this.stopWaveAnimation()
+    const svg = document.getElementById('m3-album-svg')
+    if (svg && typeof svg.pauseAnimations === 'function') {
+      svg.pauseAnimations()
+    }
   }
 
   togglePlay() {

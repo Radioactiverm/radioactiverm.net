@@ -308,11 +308,12 @@
   background: var(--md-sys-color-surface-container);
   color: var(--md-sys-color-on-surface);
   transition:
-    border-radius var(--dur-long) var(--ease-spring),
+    border-radius 450ms cubic-bezier(0.2, 0, 0, 1),
+    transform 450ms cubic-bezier(0.2, 0, 0, 1),
     background-color var(--dur-medium) var(--ease-standard),
-    transform var(--dur-long) var(--ease-spring),
     box-shadow var(--dur-medium) var(--ease-standard),
     opacity var(--dur-long) var(--ease-standard);
+  will-change: border-radius, transform;
 }
 
 .card::after {
@@ -332,6 +333,11 @@
   background: var(--md-sys-color-surface-container-high);
   transform: translateY(-3px);
   box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.55);
+  transition:
+    border-radius 450ms cubic-bezier(0.2, 0, 0, 1),
+    transform 450ms cubic-bezier(0.2, 0, 0, 1),
+    background-color var(--dur-medium) var(--ease-standard),
+    box-shadow var(--dur-medium) var(--ease-standard);
 }
 
 .card:hover::after {
@@ -349,6 +355,17 @@
   transition:
     opacity var(--dur-xlong) var(--ease-emphasized-decel) calc(var(--i, 0) * 70ms),
     transform var(--dur-xlong) var(--ease-spring-soft) calc(var(--i, 0) * 70ms);
+}
+
+.card.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    border-radius 450ms cubic-bezier(0.2, 0, 0, 1),
+    transform 450ms cubic-bezier(0.2, 0, 0, 1),
+    background-color var(--dur-medium) var(--ease-standard),
+    box-shadow var(--dur-medium) var(--ease-standard),
+    opacity var(--dur-xlong) var(--ease-emphasized-decel) calc(var(--i, 0) * 70ms);
 }
 
 .card-head {
