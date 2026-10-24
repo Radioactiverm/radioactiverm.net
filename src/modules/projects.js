@@ -38,7 +38,7 @@ export class ProjectsManager {
         const tagsHtml = proj.tags.map(t => `<span class="tag mono">${t}</span>`).join('')
 
         return `
-        <article class="card project-card ${toneClass} reveal" style="--span:${proj.span}; --span-md:${proj.spanMd}; --i:${idx}">
+        <article class="card project-card ${toneClass} is-visible" style="--span:${proj.span}; --span-md:${proj.spanMd}; --i:${idx}">
           ${transitSvg}
           <div class="project-content">
             <div class="project-top">

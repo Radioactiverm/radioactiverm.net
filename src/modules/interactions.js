@@ -65,6 +65,11 @@ export class InteractionsManager {
   }
 
   initScrollReveals() {
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'))
+      return
+    }
+
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
@@ -75,12 +80,18 @@ export class InteractionsManager {
         })
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px'
+        threshold: 0.05,
+        rootMargin: '0px 0px 80px 0px'
       }
     )
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+    document.querySelectorAll('.reveal:not(.is-visible)').forEach(el => observer.observe(el))
+
+    setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.is-visible)').forEach(el => {
+        el.classList.add('is-visible')
+      })
+    }, 600)
   }
 
   initTopBarScroll() {

@@ -39,25 +39,33 @@ function renderInterests() {
 }
 
 function initApp() {
-  const i18n = new I18nManager()
-  new ThemeManager()
-  const projects = new ProjectsManager(i18n)
-  const stack = new StackManager(i18n)
-  new TerminalManager()
-  const telemetry = new TelemetryManager(i18n)
-  new GitHubManager(i18n)
-  new LanyardManager(i18n)
-  new MusicPlayer(i18n)
-  const interactions = new InteractionsManager(i18n)
+  let i18n
+  try { i18n = new I18nManager() } catch {}
+  try { new ThemeManager() } catch {}
+  let projects
+  try { projects = new ProjectsManager(i18n) } catch {}
+  let stack
+  try { stack = new StackManager(i18n) } catch {}
+  try { new TerminalManager() } catch {}
+  let telemetry
+  try { telemetry = new TelemetryManager(i18n) } catch {}
+  try { new GitHubManager(i18n) } catch {}
+  try { new LanyardManager(i18n) } catch {}
+  try { new MusicPlayer(i18n) } catch {}
+  let interactions
+  try { interactions = new InteractionsManager(i18n) } catch {}
 
-  renderInterests()
+  try { renderInterests() } catch {}
 
-  i18n.onChange(() => {
-    projects.render()
-    stack.renderFilters()
-    telemetry.updateClock()
-    interactions.initCardSpotlights()
-  })
+  if (i18n) {
+    i18n.onChange(() => {
+      try { projects?.render() } catch {}
+      try { stack?.renderFilters() } catch {}
+      try { telemetry?.updateClock() } catch {}
+      try { interactions?.initCardSpotlights() } catch {}
+      try { interactions?.initScrollReveals() } catch {}
+    })
+  }
 
   const yearEl = document.getElementById('footer-year')
   if (yearEl) {
