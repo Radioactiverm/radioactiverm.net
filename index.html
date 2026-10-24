@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Radioactiverm · Tobiáš — Homelab, Hardware &amp; Web Developer</title>
+    <meta name="description" content="Radioactiverm (Tobiáš) — junior developer from the Czech Republic building automation, apps and websites. Proxmox homelab, ESP32 &amp; WLED hardware, Home Assistant integrations and KdeJeBus.cz." />
+    <meta name="author" content="Radioactiverm" />
+    <meta name="theme-color" content="#0a1000" />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="canonical" href="https://radioactiverm.net/" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content="https://radioactiverm.net/" />
+    <meta property="og:site_name" content="radioactiverm.net" />
+    <meta property="og:title" content="Radioactiverm · Tobiáš" />
+    <meta property="og:description" content="Homelab, hardware and web — automation, apps and websites from the Czech Republic." />
+    <meta property="og:image" content="https://avatars.githubusercontent.com/u/76690913?v=4" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="cs_CZ" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Radioactiverm · Tobiáš" />
+    <meta name="twitter:description" content="Homelab, hardware and web — automation, apps and websites from the Czech Republic." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://api.github.com" crossorigin />
+    <link rel="preconnect" href="https://api.lanyard.rest" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400..600,0..1,0&amp;display=block" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Tobiáš",
+        "alternateName": "Radioactiverm",
+        "url": "https://radioactiverm.net",
+        "image": "https://avatars.githubusercontent.com/u/76690913?v=4",
+        "email": "mailto:me@radioactiverm.net",
+        "homeLocation": { "@type": "Country", "name": "Czech Republic" },
+        "knowsAbout": ["Linux", "Proxmox VE", "Docker", "Home Assistant", "ESP32", "ESPHome", "WLED", "Networking", "Electrical engineering", "JavaScript", "Python"],
+        "sameAs": ["https://github.com/Radioactiverm", "https://kdejebus.cz"]
+      }
+    </script>
+    <script>
+      try {
+        var stored = JSON.parse(localStorage.getItem('rm:theme') || 'null');
+        var root = document.documentElement;
+        if (stored && stored.mode) root.dataset.theme = stored.mode;
+        if (stored && stored.tokens) {
+          for (var key in stored.tokens) root.style.setProperty(key, stored.tokens[key]);
+        }
+        var lang = localStorage.getItem('rm:lang');
+        if (lang) root.lang = lang;
+      } catch (error) {}
+    </script>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
+    <div class="aura" aria-hidden="true"></div>
+
+    <header class="top-bar" id="top-bar">
+      <div class="top-bar-inner">
+        <a class="brand" href="#top" id="brand-link" aria-label="radioactiverm.net">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M13.7 9.06L17.3 2.82A10.6 10.6 0 0 0 6.7 2.82L10.3 9.06A3.4 3.4 0 0 1 13.7 9.06ZM8.6 12L1.4 12A10.6 10.6 0 0 0 6.7 21.18L10.3 14.94A3.4 3.4 0 0 1 8.6 12ZM13.7 14.94L17.3 21.18A10.6 10.6 0 0 0 22.6 12L15.4 12A3.4 3.4 0 0 1 13.7 14.94ZM12 10.1a1.9 1.9 0 1 1 0 3.8a1.9 1.9 0 1 1 0-3.8Z" /></svg>
+          </span>
+          <span class="brand-text">radioactiverm<span class="brand-tld">.net</span></span>
+        </a>
+
+        <div class="telemetry" role="group" data-i18n-label="telemetry.label" aria-label="Live telemetry">
+          <a class="telemetry-chip clock-chip" id="clock-chip" href="#card-time">
+            <span class="ms" aria-hidden="true">schedule</span>
+            <span class="mono" id="clock-chip-time">--:--:--</span>
+            <span class="mono telemetry-dim" id="clock-chip-zone">CET</span>
+          </a>
+          <a class="telemetry-chip ping-chip" id="ping-chip" href="#card-network" data-quality="unknown">
+            <span class="dot dot-live" aria-hidden="true"></span>
+            <span class="mono" id="ping-chip-value">-- ms</span>
+          </a>
+        </div>
+
+        <div class="top-actions">
+          <div class="segmented" id="lang-switch" role="group" data-i18n-label="lang.label" aria-label="Language" style="--segments: 2">
+            <span class="segmented-thumb" aria-hidden="true"></span>
+            <button type="button" id="lang-en" data-lang="en" aria-pressed="true" lang="en">EN</button>
+            <button type="button" id="lang-cs" data-lang="cs" aria-pressed="false" lang="cs">CS</button>
+          </div>
+          <button type="button" class="icon-btn sl ripple" id="theme-toggle" data-i18n-label="theme.toggle" aria-label="Toggle light or dark theme">
+            <span class="ms" id="theme-toggle-icon" aria-hidden="true">light_mode</span>
+          </button>
+          <button type="button" class="icon-btn sl ripple" id="palette-toggle" popovertarget="palette-panel" aria-expanded="false" aria-controls="palette-panel" data-i18n-label="palette.toggle" aria-label="Choose accent color">
+            <span class="ms" aria-hidden="true">palette</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="palette-panel" id="palette-panel" popover role="dialog" aria-labelledby="palette-title">
+        <p class="palette-title" id="palette-title" data-i18n="palette.title">Dynamic color</p>
+        <p class="palette-sub" data-i18n="palette.sub">Pick a seed — the whole UI regenerates a Material You tonal palette.</p>
+        <div class="palette-section">
+          <span class="palette-label" data-i18n="palette.seed">Seed color</span>
+          <div class="swatches" id="swatches"></div>
+        </div>
+        <div class="palette-section">
+          <span class="palette-label" data-i18n="palette.variant">Scheme</span>
+          <div class="variant-chips" id="variant-chips"></div>
+        </div>
+        <div class="seed-readout">
+          <span class="mono" id="seed-readout">#7dcd53</span>
+          <span class="tone-strip" id="tone-strip" aria-hidden="true"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="bento" id="main">
+      <span id="top" class="visually-hidden"></span>
+
+      <article class="card card-profile reveal" id="card-profile" style="--i: 0">
+        <div class="profile-top">
+          <div class="avatar-stage" id="avatar-stage" data-status="offline">
+            <svg class="avatar-halo" viewBox="0 0 200 200" aria-hidden="true"><path id="avatar-halo-path" d="" /></svg>
+            <svg class="avatar-ring" viewBox="0 0 200 200" aria-hidden="true">
+              <defs><path id="avatar-ring-path" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" /></defs>
+              <text><textPath href="#avatar-ring-path" textLength="520" lengthAdjust="spacing">RADIOACTIVERM · TOBIÁŠ · HOMELAB · HARDWARE · WEB · </textPath></text>
+            </svg>
+            <img class="avatar" id="avatar" src="https://avatars.githubusercontent.com/u/76690913?v=4" alt="Radioactiverm" width="160" height="160" fetchpriority="high" decoding="async" />
+            <span class="avatar-status" id="avatar-status" aria-hidden="true"></span>
+          </div>
+          <div class="profile-id">
+            <p class="eyebrow mono" data-i18n="profile.hello">Hi, I'm</p>
+            <h1 class="display-name" id="display-name">Radioactiverm</h1>
+            <p class="profile-sub">
+              <span class="profile-real-name">Tobiáš</span>
+              <span class="profile-sep" aria-hidden="true">·</span>
+              <span data-i18n="profile.role">Junior developer</span>
+              <span class="profile-sep" aria-hidden="true">·</span>
+              <span class="profile-loc"><span class="ms" aria-hidden="true">location_on</span><span data-i18n="profile.location">Czech Republic</span></span>
+            </p>
+          </div>
+        </div>
+
+        <p class="profile-tagline" data-i18n="profile.tagline">I build automation, apps and websites — and the hardware they run on.</p>
+
+        <div class="presence" id="presence" data-status="loading" aria-live="polite">
+          <span class="presence-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
+          </span>
+          <span class="presence-text">
+            <span class="presence-status"><span class="dot" aria-hidden="true"></span><span id="presence-status" data-i18n="presence.loading">Connecting to Discord…</span></span>
+            <span class="presence-activity mono" id="presence-activity"></span>
+          </span>
+          <ul class="badge-row" id="badge-row" data-i18n-label="presence.badges" aria-label="Discord badges"></ul>
+        </div>
+
+        <div class="profile-actions">
+          <a class="btn btn-filled sl ripple" id="btn-github" href="https://github.com/Radioactiverm" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg>
+            <span>GitHub</span>
+          </a>
+          <div class="split-btn">
+            <a class="btn btn-tonal sl ripple" id="btn-email" href="mailto:me@radioactiverm.net">
+              <span class="ms" aria-hidden="true">mail</span>
+              <span class="btn-email-text">me@radioactiverm.net</span>
+            </a>
+            <button type="button" class="btn btn-tonal btn-icon-only sl ripple" id="btn-copy-email" data-copy="me@radioactiverm.net" data-i18n-label="actions.copyEmail" aria-label="Copy email address">
+              <span class="ms" aria-hidden="true">content_copy</span>
+            </button>
+          </div>
+          <button type="button" class="btn btn-outlined sl ripple" id="btn-discord" data-copy="radioactiverm" data-i18n-label="actions.copyDiscord" aria-label="Copy Discord username">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
+            <span class="mono">radioactiverm</span>
+            <span class="ms" aria-hidden="true">content_copy</span>
+          </button>
+        </div>
+
+        <ul class="interest-chips" id="interest-chips" data-i18n-label="profile.interests" aria-label="Interests"></ul>
+      </article>
+
+      <article class="card card-time reveal" id="card-time" style="--i: 1" aria-labelledby="time-title">
+        <div class="card-head">
+          <h2 class="card-label" id="time-title"><span class="ms" aria-hidden="true">schedule</span><span data-i18n="time.title">Local time · Prague</span></h2>
+          <span class="tag mono" id="time-zone-tag">CET · UTC+01:00</span>
+        </div>
+        <div class="clock-big mono" id="clock-big">
+          <span id="clock-hm">--:--</span><span class="clock-sec" id="clock-sec">--</span>
+        </div>
+        <p class="clock-date" id="clock-date">&nbsp;</p>
+        <div class="day-progress" id="day-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-i18n-label="time.dayProgress" aria-label="Day progress in Prague">
+          <span class="day-progress-track"><span class="day-progress-fill" id="day-progress-fill"></span></span>
+          <span class="mono day-progress-label" id="day-progress-label">0%</span>
+        </div>
+        <div class="time-meta">
+          <span class="chip chip-tonal" id="part-of-day"><span class="ms" id="part-of-day-icon" aria-hidden="true">light_mode</span><span id="part-of-day-text">&nbsp;</span></span>
+          <span class="time-diff mono" id="time-diff"></span>
+        </div>
+      </article>
+
+      <article class="card card-network reveal" id="card-network" style="--i: 2" data-quality="unknown" aria-labelledby="network-title">
+        <div class="card-head">
+          <h2 class="card-label" id="network-title"><span class="ms" aria-hidden="true">network_ping</span><span data-i18n="ping.title">Latency</span></h2>
+          <span class="tag mono" id="ping-target">HEAD /favicon.svg</span>
+        </div>
+        <div class="ping-readout">
+          <span class="ping-value mono" id="ping-value">--</span>
+          <span class="ping-unit mono">ms</span>
+          <span class="ping-quality chip" id="ping-quality"><span class="dot" aria-hidden="true"></span><span id="ping-quality-text" data-i18n="ping.measuring">measuring</span></span>
+        </div>
+        <svg class="sparkline" id="sparkline" viewBox="0 0 300 64" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="spark-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="currentColor" stop-opacity="0.35" />
+              <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <path class="spark-area" id="spark-area" d="" fill="url(#spark-gradient)" />
+          <path class="spark-line" id="spark-line" d="" />
+        </svg>
+        <dl class="ping-stats mono">
+          <div><dt>min</dt><dd id="ping-min">--</dd></div>
+          <div><dt>avg</dt><dd id="ping-avg">--</dd></div>
+          <div><dt>max</dt><dd id="ping-max">--</dd></div>
+          <div><dt>jitter</dt><dd id="ping-jitter">--</dd></div>
+        </dl>
+      </article>
+
+      <article class="card card-player reveal" id="card-player" style="--i: 3" data-state="idle" aria-labelledby="player-title">
+        <div class="card-head">
+          <h2 class="card-label" id="player-title"><span class="ms" aria-hidden="true">graphic_eq</span><span data-i18n="player.title">Now playing</span></h2>
+          <span class="tag mono" id="track-index">00/00</span>
+        </div>
+        <div class="player-body">
+          <div class="cover" id="cover">
+            <span class="ms cover-icon" aria-hidden="true">music_note</span>
+            <img class="cover-img" id="cover-img" alt="" hidden />
+          </div>
+          <div class="track-meta">
+            <p class="track-title" id="track-title" data-i18n="player.loading">Loading playlist…</p>
+            <p class="track-sub mono">radioactiverm.net/music</p>
+            <div class="eq" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+        <div class="wavy" id="wavy" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0:00" data-i18n-label="player.seek" aria-label="Seek">
+          <svg class="wavy-svg" id="wavy-svg" aria-hidden="true">
+            <path class="wavy-active" id="wavy-active" d="" />
+            <path class="wavy-track" id="wavy-track" d="" />
+            <circle class="wavy-stop" id="wavy-stop" r="2" />
+          </svg>
+        </div>
+        <div class="player-times mono">
+          <span id="time-current">0:00</span>
+          <span id="time-total">0:00</span>
+        </div>
+        <div class="player-controls">
+          <button type="button" class="icon-btn icon-btn-tonal sl ripple" id="btn-prev" data-i18n-label="player.prev" aria-label="Previous track"><span class="ms" aria-hidden="true">skip_previous</span></button>
+          <button type="button" class="play-btn sl ripple" id="btn-play" data-i18n-label="player.play" aria-label="Play"><span class="ms" id="play-icon" aria-hidden="true">play_arrow</span></button>
+          <button type="button" class="icon-btn icon-btn-tonal sl ripple" id="btn-next" data-i18n-label="player.next" aria-label="Next track"><span class="ms" aria-hidden="true">skip_next</span></button>
+        </div>
+        <audio id="audio" preload="none"></audio>
+      </article>
+
+      <article class="card card-about reveal" id="card-about" style="--i: 4" aria-labelledby="about-title">
+        <div class="card-head">
+          <h2 class="card-label" id="about-title"><span class="ms" aria-hidden="true">person</span><span data-i18n="about.title">About</span></h2>
+        </div>
+        <dl class="facts">
+          <div class="fact"><dt data-i18n="about.role">role</dt><dd data-i18n="about.roleValue">Junior dev</dd></div>
+          <div class="fact"><dt data-i18n="about.focus">focus</dt><dd data-i18n="about.focusValue">Frontend &amp; backend</dd></div>
+          <div class="fact"><dt data-i18n="about.based">based in</dt><dd data-i18n="about.basedValue">Czech Republic</dd></div>
+          <div class="fact"><dt data-i18n="about.speaks">speaks</dt><dd data-i18n="about.speaksValue">Czech, English</dd></div>
+          <div class="fact"><dt data-i18n="about.design">design</dt><dd>Material 3</dd></div>
+          <div class="fact"><dt data-i18n="about.driver">daily driver</dt><dd>CachyOS</dd></div>
+        </dl>
+      </article>
+
+      <article class="card card-github reveal" id="card-github" style="--i: 5" data-state="loading" aria-labelledby="github-title">
+        <div class="card-head">
+          <h2 class="card-label" id="github-title">
+            <svg class="card-label-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg>
+            <span>GitHub</span>
+          </h2>
+          <button type="button" class="gh-state chip sl ripple" id="gh-state" data-i18n-title="gh.refresh" title="Refresh">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="mono" id="gh-state-text">sync</span>
+          </button>
+        </div>
+        <div class="gh-stats">
+          <div class="gh-stat"><span class="gh-stat-value mono skeleton" id="gh-repos">0</span><span class="gh-stat-label" data-i18n="gh.repos">repos</span></div>
+          <div class="gh-stat gh-stat-accent"><span class="gh-stat-value mono skeleton" id="gh-stars">0</span><span class="gh-stat-label" data-i18n="gh.stars">stars</span></div>
+          <div class="gh-stat"><span class="gh-stat-value mono skeleton" id="gh-followers">0</span><span class="gh-stat-label" data-i18n="gh.followers">followers</span></div>
+          <div class="gh-stat"><span class="gh-stat-value mono skeleton" id="gh-since">0000</span><span class="gh-stat-label" data-i18n="gh.since">since</span></div>
+        </div>
+        <div class="gh-heat-wrap">
+          <div class="gh-heat" id="gh-heat" role="img" data-i18n-label="gh.heat" aria-label="Public activity over the last 30 days"></div>
+          <div class="gh-heat-caption mono"><span data-i18n="gh.daysAgo">30d ago</span><span data-i18n="gh.today">today</span></div>
+        </div>
+        <ol class="gh-feed" id="gh-feed" aria-live="polite"></ol>
+        <a class="text-link gh-link" href="https://github.com/Radioactiverm?tab=repositories" target="_blank" rel="noopener noreferrer"><span data-i18n="gh.all">All repositories</span><span class="ms" aria-hidden="true">arrow_outward</span></a>
+      </article>
+
+      <article class="card card-stack reveal" id="card-stack" style="--i: 6" aria-labelledby="stack-title">
+        <div class="card-head">
+          <h2 class="card-label" id="stack-title"><span class="ms" aria-hidden="true">deployed_code</span><span data-i18n="stack.title">Tech &amp; homelab stack</span></h2>
+          <span class="tag mono" id="stack-count">0</span>
+        </div>
+        <div class="filter-chips" id="stack-filters" role="toolbar" data-i18n-label="stack.filter" aria-label="Filter stack"></div>
+        <ul class="stack-grid" id="stack-grid"></ul>
+      </article>
+
+      <article class="card card-homelab reveal" id="card-homelab" style="--i: 7" aria-labelledby="homelab-title">
+        <div class="term-bar">
+          <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <h2 class="term-title mono" id="homelab-title">homelab — inventory</h2>
+          <span class="ms term-icon" aria-hidden="true">dns</span>
+        </div>
+        <p class="term-line mono"><span class="term-user">root@pve</span><span class="term-sep">:</span><span class="term-path">~</span><span class="term-sep">$</span> <span class="term-cmd" id="term-cmd"></span><span class="term-caret" aria-hidden="true"></span></p>
+        <ul class="node-list" id="node-list"></ul>
+        <p class="term-foot mono" id="term-foot"></p>
+      </article>
+
+      <header class="section-head reveal" id="projects" style="--i: 0">
+        <div>
+          <h2 class="section-title" data-i18n-html="projects.title">Featured <em>projects</em></h2>
+          <p class="section-sub" data-i18n="projects.sub">Live transit maps, reverse-engineered APIs, hardware builds and the smart home glue in between.</p>
+        </div>
+        <a class="btn btn-outlined btn-sm sl ripple" id="btn-all-repos" href="https://github.com/Radioactiverm?tab=repositories" target="_blank" rel="noopener noreferrer"><span data-i18n="projects.all">All repos</span><span class="ms" aria-hidden="true">arrow_outward</span></a>
+      </header>
+      <div class="projects-grid" id="projects-grid"></div>
+    </main>
+
+    <footer class="site-footer" id="site-footer">
+      <div class="footer-big" aria-hidden="true">radioactiverm</div>
+      <div class="footer-row">
+        <span>© <span id="footer-year">2026</span> Tobiáš · <span data-i18n="footer.made">Built with Vite &amp; Material 3 Expressive</span></span>
+        <span class="footer-meta">
+          <a href="https://github.com/Radioactiverm/radioactiverm.net" target="_blank" rel="noopener noreferrer" data-i18n="footer.source">Source</a>
+          <a href="mailto:me@radioactiverm.net">me@radioactiverm.net</a>
+          <a href="#top" class="accent" data-i18n="footer.top">Back to top ↑</a>
+        </span>
+      </div>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"><span class="ms" aria-hidden="true">check_circle</span><span id="toast-text"></span></div>
+  </body>
+</html>
