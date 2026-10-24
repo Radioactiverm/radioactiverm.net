@@ -681,12 +681,30 @@
   cursor: pointer;
   border-radius: var(--shape-xs);
   touch-action: none;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
+}
+
+.wavy:focus,
+.wavy:focus:not(:focus-visible) {
+  outline: none !important;
+}
+
+.wavy:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary) !important;
+  outline-offset: 4px;
 }
 
 .wavy-svg {
   width: 100%;
   height: 100%;
   overflow: visible;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .wavy-active {
@@ -694,6 +712,7 @@
   stroke: var(--md-sys-color-primary);
   stroke-width: 4;
   stroke-linecap: round;
+  pointer-events: none;
 }
 
 .wavy-track {
@@ -701,10 +720,22 @@
   stroke: var(--md-sys-color-secondary-container);
   stroke-width: 4;
   stroke-linecap: round;
+  pointer-events: none;
 }
 
 .wavy-stop {
   fill: var(--md-sys-color-primary);
+  stroke: var(--md-sys-color-surface-container);
+  stroke-width: 2;
+  pointer-events: none;
+  transition: transform var(--dur-short) var(--ease-spring);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.wavy:hover .wavy-stop,
+.wavy.is-dragging .wavy-stop {
+  transform: scale(1.4);
 }
 
 .player-times {

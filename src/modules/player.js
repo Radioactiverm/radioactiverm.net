@@ -32,6 +32,8 @@ export class MusicPlayer {
     this.coverUrl = null
     this.savedVolume = 0.8
     this.currentBpm = 120
+    this.isDragging = false
+    this.dragPercent = null
 
     this.init()
   }
@@ -386,29 +388,53 @@ export class MusicPlayer {
 
     const splitX = Math.max(0, Math.min(width, (percent / 100) * width))
 
-    const step = 3
-    const amplitude = this.isPlaying ? 2.2 : 0
-    const wavelength = 40
+    const step = 2
+    const amplitude = this.isPlaying ? 2.4 : 0
+    const wavelength = 36
+    const flatStart = 10
+    const flatEnd = 12
 
-    let activePath = `M 0 ${midY}`
-    for (let x = 0; x <= splitX; x += step) {
-      const y = midY + Math.sin((x / wavelength) * 2 * Math.PI - this.phase) * amplitude
-      activePath += ` L ${x.toFixed(1)} ${y.toFixed(1)}`
+    let activePath = `M 0 ${midY.toFixed(1)}`
+
+    if (splitX <= flatStart + flatEnd) {
+      activePath += ` L ${splitX.toFixed(1)} ${midY.toFixed(1)}`
+    } else {
+      const avail = splitX - flatStart - flatEnd
+      const fade = Math.min(24, avail / 2)
+
+      activePath += ` L ${flatStart.toFixed(1)} ${midY.toFixed(1)}`
+
+      for (let x = flatStart; x <= splitX - flatEnd; x += step) {
+        let envelope = 1
+        if (x < flatStart + fade) {
+          const t = (x - flatStart) / fade
+          envelope = 0.5 * (1 - Math.cos(t * Math.PI))
+        } else if (x > splitX - flatEnd - fade) {
+          const t = (splitX - flatEnd - x) / fade
+          envelope = 0.5 * (1 - Math.cos(t * Math.PI))
+        }
+        const amp = amplitude * envelope
+        const y = midY + Math.sin(((x - flatStart) / wavelength) * 2 * Math.PI - this.phase) * amp
+        activePath += ` L ${x.toFixed(1)} ${y.toFixed(1)}`
+      }
+
+      activePath += ` L ${(splitX - flatEnd).toFixed(1)} ${midY.toFixed(1)}`
+      activePath += ` L ${splitX.toFixed(1)} ${midY.toFixed(1)}`
     }
-    activePath += ` L ${splitX.toFixed(1)} ${midY}`
 
-    const trackPath = `M ${splitX.toFixed(1)} ${midY} L ${width.toFixed(1)} ${midY}`
+    const trackPath = `M ${splitX.toFixed(1)} ${midY.toFixed(1)} L ${width.toFixed(1)} ${midY.toFixed(1)}`
 
     this.wavyActive.setAttribute('d', activePath)
     this.wavyTrack.setAttribute('d', trackPath)
 
     this.wavyStop.setAttribute('cx', splitX.toFixed(1))
-    this.wavyStop.setAttribute('cy', midY.toString())
+    this.wavyStop.setAttribute('cy', midY.toFixed(1))
 
     if (this.wavy) {
       this.wavy.setAttribute('aria-valuenow', Math.round(percent).toString())
-      if (this.audio && this.audio.currentTime) {
-        this.wavy.setAttribute('aria-valuetext', this.formatTime(this.audio.currentTime))
+      if (this.audio && this.audio.duration) {
+        const curSec = (percent / 100) * this.audio.duration
+        this.wavy.setAttribute('aria-valuetext', this.formatTime(curSec))
       }
     }
   }
@@ -417,7 +443,9 @@ export class MusicPlayer {
     if (this.animFrameId) return
     const loop = () => {
       this.phase += 0.02
-      if (this.audio && this.audio.duration) {
+      if (this.isDragging && this.dragPercent !== null) {
+        this.updateWavy(this.dragPercent)
+      } else if (this.audio && this.audio.duration) {
         const pct = (this.audio.currentTime / this.audio.duration) * 100
         this.updateWavy(pct)
       } else {
@@ -433,16 +461,28 @@ export class MusicPlayer {
       cancelAnimationFrame(this.animFrameId)
       this.animFrameId = null
     }
-    if (this.audio && this.audio.duration) {
+    if (this.isDragging && this.dragPercent !== null) {
+      this.updateWavy(this.dragPercent)
+    } else if (this.audio && this.audio.duration) {
       const pct = (this.audio.currentTime / this.audio.duration) * 100
       this.updateWavy(pct)
     }
   }
 
-  seekToPercent(pct) {
-    if (!this.audio || !this.audio.duration) return
-    this.audio.currentTime = (pct / 100) * this.audio.duration
-    this.updateWavy(pct)
+  seekToPercent(pct, isFinal = false) {
+    const clampedPct = Math.max(0, Math.min(100, pct))
+    this.dragPercent = clampedPct
+    if (this.audio && this.audio.duration) {
+      const targetTime = (clampedPct / 100) * this.audio.duration
+      this.audio.currentTime = targetTime
+      if (this.timeCurrent) {
+        this.timeCurrent.textContent = this.formatTime(targetTime)
+      }
+    }
+    this.updateWavy(clampedPct)
+    if (isFinal) {
+      this.dragPercent = null
+    }
   }
 
   bindEvents() {
@@ -476,6 +516,7 @@ export class MusicPlayer {
       })
 
       this.audio.addEventListener('timeupdate', () => {
+        if (this.isDragging) return
         if (this.timeCurrent) {
           this.timeCurrent.textContent = this.formatTime(this.audio.currentTime)
         }
@@ -494,25 +535,61 @@ export class MusicPlayer {
       })
     }
 
-    const handleSeek = event => {
-      if (!this.wavy) return
+    const getPercentFromEvent = event => {
+      if (!this.wavy) return 0
       const rect = this.wavy.getBoundingClientRect()
-      const clientX = event.clientX ?? (event.touches && event.touches[0].clientX)
-      if (clientX === undefined) return
+      const clientX = event.clientX !== undefined
+        ? event.clientX
+        : (event.touches && event.touches[0] ? event.touches[0].clientX : 0)
       const offsetX = Math.max(0, Math.min(rect.width, clientX - rect.left))
-      const pct = (offsetX / rect.width) * 100
-      this.seekToPercent(pct)
+      return rect.width ? (offsetX / rect.width) * 100 : 0
     }
 
     if (this.wavy) {
-      this.wavy.addEventListener('click', handleSeek)
+      const onPointerDown = e => {
+        if (e.button !== undefined && e.button !== 0) return
+        this.isDragging = true
+        this.wavy.classList.add('is-dragging')
+        try {
+          this.wavy.setPointerCapture(e.pointerId)
+        } catch {}
+        const pct = getPercentFromEvent(e)
+        this.seekToPercent(pct, false)
+        e.preventDefault()
+      }
+
+      const onPointerMove = e => {
+        if (!this.isDragging) return
+        const pct = getPercentFromEvent(e)
+        this.seekToPercent(pct, false)
+        e.preventDefault()
+      }
+
+      const onPointerUp = e => {
+        if (!this.isDragging) return
+        this.isDragging = false
+        this.wavy.classList.remove('is-dragging')
+        try {
+          if (this.wavy.hasPointerCapture(e.pointerId)) {
+            this.wavy.releasePointerCapture(e.pointerId)
+          }
+        } catch {}
+        const pct = getPercentFromEvent(e)
+        this.seekToPercent(pct, true)
+      }
+
+      this.wavy.addEventListener('pointerdown', onPointerDown)
+      this.wavy.addEventListener('pointermove', onPointerMove)
+      this.wavy.addEventListener('pointerup', onPointerUp)
+      this.wavy.addEventListener('pointercancel', onPointerUp)
+      this.wavy.addEventListener('click', e => e.preventDefault())
 
       this.wavy.addEventListener('keydown', e => {
         if (!this.audio || !this.audio.duration) return
         if (e.key === 'ArrowRight') {
-          this.audio.currentTime = Math.min(this.audio.duration, this.audio.currentTime + 5)
+          this.seekToPercent(Math.min(100, ((this.audio.currentTime + 5) / this.audio.duration) * 100), true)
         } else if (e.key === 'ArrowLeft') {
-          this.audio.currentTime = Math.max(0, this.audio.currentTime - 5)
+          this.seekToPercent(Math.max(0, ((this.audio.currentTime - 5) / this.audio.duration) * 100), true)
         } else if (e.key === ' ') {
           e.preventDefault()
           this.togglePlay()
@@ -521,7 +598,9 @@ export class MusicPlayer {
     }
 
     window.addEventListener('resize', () => {
-      if (this.audio && this.audio.duration) {
+      if (this.isDragging && this.dragPercent !== null) {
+        this.updateWavy(this.dragPercent)
+      } else if (this.audio && this.audio.duration) {
         const pct = (this.audio.currentTime / this.audio.duration) * 100
         this.updateWavy(pct)
       } else {
