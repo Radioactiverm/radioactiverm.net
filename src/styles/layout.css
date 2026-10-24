@@ -2,6 +2,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
+  width: 100%;
   padding: 12px var(--page-pad);
   transition: background-color var(--dur-medium) var(--ease-standard), box-shadow var(--dur-medium) var(--ease-standard);
 }
@@ -18,6 +19,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  width: 100%;
   max-width: var(--page-max);
   height: calc(var(--topbar-h) - 24px);
   margin: 0 auto;
@@ -32,6 +34,7 @@
   font-weight: 800;
   font-size: 17px;
   letter-spacing: -0.02em;
+  flex-shrink: 0;
   transition: color var(--dur-medium) var(--ease-standard);
 }
 
@@ -68,6 +71,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .telemetry-chip {
@@ -125,6 +129,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
 }
 
 .palette-panel {
@@ -471,6 +476,12 @@
   }
 }
 
+@media (max-width: 768px) {
+  .clock-chip {
+    display: none;
+  }
+}
+
 @media (max-width: 680px) {
   :root {
     --gap: 12px;
@@ -500,7 +511,7 @@
   }
 
   .telemetry-chip {
-    padding: 0 12px;
+    padding: 0 10px;
   }
 
   .section-head {
@@ -510,18 +521,33 @@
   }
 }
 
-@media (max-width: 420px) {
-  .clock-chip .ms {
+@media (max-width: 520px) {
+  .telemetry {
     display: none;
   }
 
-  .segmented button {
-    min-width: 36px;
-    padding: 0 8px;
+  .top-bar {
+    padding: 10px 16px;
   }
 
   .top-actions {
-    gap: 2px;
+    gap: 4px;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .segmented button {
+    min-width: 34px;
+    padding: 0 8px;
+  }
+
+  .palette-panel {
+    right: 12px;
+    left: 12px;
+    width: auto;
   }
 }
 
