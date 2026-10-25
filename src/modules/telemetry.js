@@ -145,9 +145,9 @@ export class TelemetryManager {
   async measurePing() {
     const start = performance.now()
     try {
-      const response = await fetch(`/favicon.svg?_t=${Date.now()}`, {
-        method: 'HEAD',
-        cache: 'no-store'
+      const response = await fetch('/favicon.svg', {
+        method: 'GET',
+        cache: 'no-cache'
       })
       if (!response.ok) throw new Error('ping error')
       const latency = Math.max(1, Math.round(performance.now() - start))
@@ -237,6 +237,15 @@ export class TelemetryManager {
 
   startPing() {
     this.measurePing()
-    setInterval(() => this.measurePing(), 4000)
+    setInterval(() => {
+      if (!document.hidden) {
+        this.measurePing()
+      }
+    }, 10000)
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        this.measurePing()
+      }
+    })
   }
 }

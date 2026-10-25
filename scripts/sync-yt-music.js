@@ -51,7 +51,8 @@ function runProcess(cmd, args) {
 }
 
 function normalizeTitle(name) {
-  let clean = name.replace(/\.[^/.]+$/, '')
+  let clean = name.replace(/#/g, '')
+  clean = clean.replace(/\.[^/.]+$/, '')
   clean = clean.replace(/\(feat\.[^)]+\)/gi, '')
   clean = clean.replace(/\[feat\.[^\]]+\]/gi, '')
   clean = clean.replace(/[\s_]+/g, ' ').trim().toLowerCase()
@@ -158,6 +159,22 @@ export async function syncYtMusic() {
   const entries = playlistData.entries || []
   if (!Array.isArray(entries) || entries.length === 0) return
 
+  for (const f of fs.readdirSync(publicMusicDir)) {
+    if (f.includes('#')) {
+      const clean = f.replace(/#/g, '').trim()
+      if (clean && clean !== f) {
+        fs.renameSync(path.join(publicMusicDir, f), path.join(publicMusicDir, clean))
+        const baseOld = path.basename(f, path.extname(f))
+        const baseClean = path.basename(clean, path.extname(clean))
+        const oldCover = path.join(publicCoversDir, `${baseOld}.jpg`)
+        const newCover = path.join(publicCoversDir, `${baseClean}.jpg`)
+        if (fs.existsSync(oldCover)) {
+          fs.renameSync(oldCover, newCover)
+        }
+      }
+    }
+  }
+
   const dirFiles = fs.readdirSync(publicMusicDir)
   const existingAudioFiles = dirFiles.filter(f =>
     audioExtensions.has(path.extname(f).toLowerCase())
@@ -224,9 +241,14 @@ export async function syncYtMusic() {
         )
         const newlyAdded = newAudio.find(f => !existingAudioFiles.includes(f))
         if (newlyAdded) {
-          matchedFile = newlyAdded
-          existingAudioFiles.push(newlyAdded)
-          existingByNormTitle.set(normalizeTitle(newlyAdded), newlyAdded)
+          let cleanAdded = newlyAdded
+          if (newlyAdded.includes('#')) {
+            cleanAdded = newlyAdded.replace(/#/g, '').trim()
+            fs.renameSync(path.join(publicMusicDir, newlyAdded), path.join(publicMusicDir, cleanAdded))
+          }
+          matchedFile = cleanAdded
+          existingAudioFiles.push(cleanAdded)
+          existingByNormTitle.set(normalizeTitle(cleanAdded), cleanAdded)
         }
       } catch {}
     }

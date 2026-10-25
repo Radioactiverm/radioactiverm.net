@@ -138,7 +138,7 @@ export class MusicPlayer {
 
   getCoverUrl(filename) {
     const base = filename.replace(/\.[^/.]+$/, '')
-    return encodeURI(`/music/covers/${base}.jpg`)
+    return `/music/covers/${encodeURIComponent(base)}.jpg`
   }
 
   preloadCovers() {
@@ -233,7 +233,7 @@ export class MusicPlayer {
   }
 
   cleanTrackName(filename) {
-    return filename.replace(/\.[^/.]+$/, '')
+    return filename.replace(/\.[^/.]+$/, '').replace(/^[#\s]+/, '')
   }
 
   setTrackTitle(text) {
@@ -255,7 +255,7 @@ export class MusicPlayer {
     }
 
     this.setTrackTitle(this.cleanTrackName(file))
-    const encoded = encodeURI(`/music/${file}`)
+    const encoded = `/music/${encodeURIComponent(file)}`
 
     if (this.audio) {
       this.audio.src = encoded

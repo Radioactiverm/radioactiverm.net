@@ -110,6 +110,32 @@ export async function syncMusic() {
     } catch {}
   }
 
+  for (const f of fs.readdirSync(publicMusicDir)) {
+    if (f.includes('#')) {
+      const clean = f.replace(/#/g, '').trim()
+      if (clean && clean !== f) {
+        fs.renameSync(path.join(publicMusicDir, f), path.join(publicMusicDir, clean))
+        const baseOld = path.basename(f, path.extname(f))
+        const baseClean = path.basename(clean, path.extname(clean))
+        const oldCover = path.join(publicCoversDir, `${baseOld}.jpg`)
+        const newCover = path.join(publicCoversDir, `${baseClean}.jpg`)
+        if (fs.existsSync(oldCover)) {
+          fs.renameSync(oldCover, newCover)
+        }
+      }
+    }
+  }
+
+  existingList = existingList.map(item => {
+    if (typeof item === 'string') {
+      return item.replace(/#/g, '').trim()
+    }
+    if (item && item.file) {
+      return { ...item, file: item.file.replace(/#/g, '').trim() }
+    }
+    return item
+  })
+
   const existingFileNames = new Set(
     existingList.map(item => (typeof item === 'string' ? item : item.file))
   )
