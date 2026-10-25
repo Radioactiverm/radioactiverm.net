@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://radioactiverm.net/sitemap.xml

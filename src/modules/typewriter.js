@@ -59,6 +59,15 @@ export class TypewriterManager {
       return
     }
 
+    if (this.prefixEl && this.textEl && this.prefixEl.textContent.trim()) {
+      this.phase = 'pausing'
+      this.timeoutId = setTimeout(() => {
+        this.phase = 'deleting-text'
+        this.tick()
+      }, 2000)
+      return
+    }
+
     if (this.prefixEl) this.prefixEl.textContent = ''
     if (this.textEl) this.textEl.textContent = ''
 

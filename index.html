@@ -23,10 +23,14 @@
     <meta name="twitter:description" content="Homelab, hardware and web — automation, apps and websites from the Czech Republic." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://api.github.com" crossorigin />
     <link rel="preconnect" href="https://api.lanyard.rest" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400..600,0..1,0&amp;display=block" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&amp;display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&amp;display=swap" />
+    </noscript>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -133,7 +137,7 @@
     <main class="bento" id="main">
       <span id="top" class="visually-hidden"></span>
 
-      <article class="card card-profile reveal" id="card-profile" style="--i: 0">
+      <article class="card card-profile reveal is-visible" id="card-profile" style="--i: 0">
         <div class="profile-top">
           <div class="avatar-stage" id="avatar-stage" data-status="offline">
             <svg class="avatar-halo" viewBox="0 0 200 200" aria-hidden="true"><path id="avatar-halo-path" d="" /></svg>
@@ -141,12 +145,12 @@
               <defs><path id="avatar-ring-path" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" /></defs>
               <text><textPath href="#avatar-ring-path" textLength="520" lengthAdjust="spacing">RADIOACTIVERM · HOMELAB · HARDWARE · WEB · AUTOMATION · </textPath></text>
             </svg>
-            <img class="avatar" id="avatar" src="https://avatars.githubusercontent.com/u/76690913?v=4" alt="Radioactiverm" width="160" height="160" fetchpriority="high" decoding="async" />
+            <img class="avatar" id="avatar" src="https://avatars.githubusercontent.com/u/76690913?s=240&amp;v=4" alt="Radioactiverm" width="160" height="160" fetchpriority="high" decoding="async" />
             <span class="avatar-status" id="avatar-status" aria-hidden="true"></span>
           </div>
           <div class="profile-id">
             <p class="eyebrow mono" data-i18n="profile.hello">Hi, I'm</p>
-            <h1 class="display-name" id="display-name">Radioactiverm</h1>
+            <h1 class="display-name" id="display-name"><span class="letter" style="--li:0">R</span><span class="letter" style="--li:1">a</span><span class="letter" style="--li:2">d</span><span class="letter" style="--li:3">i</span><span class="letter" style="--li:4">o</span><span class="letter" style="--li:5">a</span><span class="letter" style="--li:6">c</span><span class="letter" style="--li:7">t</span><span class="letter" style="--li:8">i</span><span class="letter" style="--li:9">v</span><span class="letter" style="--li:10">e</span><span class="letter" style="--li:11">r</span><span class="letter" style="--li:12">m</span><span class="name-dot" aria-hidden="true">.</span></h1>
             <p class="profile-sub">
               <span data-i18n="profile.role">Junior developer</span>
               <span class="profile-sep" aria-hidden="true">·</span>
@@ -155,7 +159,7 @@
           </div>
         </div>
 
-        <p class="profile-tagline" id="profile-tagline" data-i18n-label="profile.tagline" aria-label="I build automation, apps and websites — and the hardware that runs it."><span class="typewriter-prefix" id="typewriter-prefix"></span><span class="typewriter-text" id="typewriter-text"></span><span class="typewriter-cursor" id="typewriter-cursor" aria-hidden="true"></span></p>
+        <p class="profile-tagline" id="profile-tagline" data-i18n-label="profile.tagline" aria-label="I build automation, apps and websites — and the hardware that runs it."><span class="typewriter-prefix" id="typewriter-prefix">I build </span><span class="typewriter-text" id="typewriter-text">automation</span><span class="typewriter-cursor" id="typewriter-cursor" aria-hidden="true"></span></p>
 
         <div class="presence" id="presence" data-status="loading" aria-live="polite">
           <span class="presence-icon" aria-hidden="true">
@@ -182,7 +186,7 @@
               <span class="ms" aria-hidden="true">content_copy</span>
             </button>
           </div>
-          <button type="button" class="btn btn-outlined sl ripple" id="btn-discord" data-copy="radioactiverm" data-i18n-label="actions.copyDiscord" aria-label="Copy Discord username">
+          <button type="button" class="btn btn-outlined sl ripple" id="btn-discord" data-copy="radioactiverm" data-i18n-label="actions.copyDiscord" aria-label="radioactiverm — Copy Discord username">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" /></svg>
             <span class="mono">radioactiverm</span>
             <span class="ms" aria-hidden="true">content_copy</span>

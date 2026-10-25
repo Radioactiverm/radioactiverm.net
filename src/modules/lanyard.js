@@ -129,7 +129,7 @@ export class LanyardManager {
 
     if (this.avatar && user.avatar) {
       const ext = user.avatar.startsWith('a_') ? 'gif' : 'png'
-      this.avatar.src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${user.avatar}.${ext}?size=256`
+      this.avatar.src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${user.avatar}.${ext}?size=128`
     }
 
     if (this.avatarStage) {
@@ -206,6 +206,8 @@ export class LanyardManager {
     const img = document.createElement('img')
     img.src = BADGE_DIR + file
     img.alt = label
+    img.width = 20
+    img.height = 20
     img.loading = 'lazy'
     img.onerror = () => li.remove()
 

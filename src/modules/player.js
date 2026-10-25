@@ -120,7 +120,6 @@ export class MusicPlayer {
         'vlone (slowed).opus'
       ]
     }
-    this.preloadCovers()
     this.loadTrack(0, false)
   }
 
@@ -138,7 +137,7 @@ export class MusicPlayer {
 
   getCoverUrl(filename) {
     const base = filename.replace(/\.[^/.]+$/, '')
-    return `/music/covers/${encodeURIComponent(base)}.jpg`
+    return `/music/covers/${encodeURIComponent(base).replace(/%2B/g, '+')}.jpg`
   }
 
   preloadCovers() {
@@ -255,11 +254,13 @@ export class MusicPlayer {
     }
 
     this.setTrackTitle(this.cleanTrackName(file))
-    const encoded = `/music/${encodeURIComponent(file)}`
+    const encoded = `/music/${encodeURIComponent(file).replace(/%2B/g, '+')}`
 
     if (this.audio) {
       this.audio.src = encoded
-      this.audio.load()
+      if (autoPlay) {
+        this.audio.load()
+      }
     }
 
     const coverUrl = this.coverCache.get(file) || this.getCoverUrl(file)
