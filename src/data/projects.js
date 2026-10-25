@@ -63,7 +63,7 @@ export const projects = [
   {
     id: 'flipper-fsociety',
     title: 'flipper-fsociety-asset-pack',
-    desc: 'Custom graphics, animations and icon pack for Flipper Zero inspired by Mr. Robot and Fsociety aesthetic, optimized for the 128x64 monochromatic display.',
+    desc: 'Custom graphics, animations and icon pack for Flipper Zero inspired by Mr. Robot and the Fsociety aesthetic, optimized for the 128x64 monochromatic display.',
     descCs: 'Balíček animací, ikon a grafických podkladů pro Flipper Zero inspirovaný seriálem Mr. Robot a estetikou Fsociety, navržený pro 128x64 LCD.',
     tags: ['Flipper Zero', 'Pixel Art', 'C', 'Asset Pack'],
     liveUrl: 'https://github.com/Radioactiverm/flipper-fsociety-asset-pack',

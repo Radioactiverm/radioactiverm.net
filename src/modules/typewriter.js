@@ -10,36 +10,28 @@ export class TypewriterManager {
 
     this.timeoutId = null
     this.isDestroyed = false
-    this.currentWordIndex = 0
-    this.currentCharIndex = 0
-    this.isDeleting = false
-    this.isInitial = true
+    this.currentIndex = 0
+    this.phase = 'idle'
 
     this.phrases = {
-      en: {
-        prefix: 'I build ',
-        words: [
-          'automation',
-          'apps',
-          'websites',
-          'and the hardware that runs on it'
-        ]
-      },
-      cs: {
-        prefix: 'Tvořím ',
-        words: [
-          'automatizace',
-          'aplikace',
-          'weby',
-          'a hardware, na kterém běží'
-        ]
-      }
+      en: [
+        { prefix: 'I build ', text: 'automation' },
+        { prefix: 'I build ', text: 'apps' },
+        { prefix: 'I build ', text: 'websites' },
+        { prefix: 'And ', text: 'the hardware that runs it' }
+      ],
+      cs: [
+        { prefix: 'Tvořím ', text: 'automatizace' },
+        { prefix: 'Tvořím ', text: 'aplikace' },
+        { prefix: 'Tvořím ', text: 'weby' },
+        { prefix: 'A ', text: 'hardware, který to pohání' }
+      ]
     }
 
     this.start()
   }
 
-  getLangData() {
+  getItems() {
     const lang = this.i18n?.currentLang === 'cs' ? 'cs' : 'en'
     return this.phrases[lang] || this.phrases.en
   }
@@ -49,23 +41,20 @@ export class TypewriterManager {
       clearTimeout(this.timeoutId)
       this.timeoutId = null
     }
-    this.isInitial = false
-    this.isDeleting = false
-    this.currentWordIndex = 0
-    this.currentCharIndex = 0
-    const data = this.getLangData()
-    if (this.prefixEl) this.prefixEl.textContent = data.prefix
+    this.currentIndex = 0
+    if (this.prefixEl) this.prefixEl.textContent = ''
     if (this.textEl) this.textEl.textContent = ''
+    this.phase = 'typing-prefix'
     this.tick()
   }
 
   start() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const data = this.getLangData()
+    const items = this.getItems()
 
     if (prefersReducedMotion) {
-      if (this.prefixEl) this.prefixEl.textContent = data.prefix
-      if (this.textEl) this.textEl.textContent = data.words.join(', ')
+      if (this.prefixEl) this.prefixEl.textContent = items[0].prefix
+      if (this.textEl) this.textEl.textContent = items.map(i => (i.prefix ? '' : '— ') + i.text).join(', ')
       if (this.cursorEl) this.cursorEl.style.display = 'none'
       return
     }
@@ -73,69 +62,77 @@ export class TypewriterManager {
     if (this.prefixEl) this.prefixEl.textContent = ''
     if (this.textEl) this.textEl.textContent = ''
 
+    this.phase = 'typing-prefix'
     this.timeoutId = setTimeout(() => {
-      this.typeInitial()
+      this.tick()
     }, 400)
-  }
-
-  typeInitial() {
-    const data = this.getLangData()
-    const fullInitial = data.prefix + data.words[0]
-
-    if (this.currentCharIndex < fullInitial.length) {
-      this.currentCharIndex++
-      const currentSub = fullInitial.slice(0, this.currentCharIndex)
-
-      if (currentSub.length <= data.prefix.length) {
-        if (this.prefixEl) this.prefixEl.textContent = currentSub
-        if (this.textEl) this.textEl.textContent = ''
-      } else {
-        if (this.prefixEl) this.prefixEl.textContent = data.prefix
-        if (this.textEl) this.textEl.textContent = currentSub.slice(data.prefix.length)
-      }
-
-      const speed = 70 + Math.random() * 25
-      this.timeoutId = setTimeout(() => this.typeInitial(), speed)
-    } else {
-      if (this.prefixEl) this.prefixEl.textContent = data.prefix
-      if (this.textEl) this.textEl.textContent = data.words[0]
-      this.isInitial = false
-      this.isDeleting = true
-      this.currentCharIndex = data.words[0].length
-      this.timeoutId = setTimeout(() => this.tick(), 1800)
-    }
   }
 
   tick() {
     if (this.isDestroyed) return
 
-    const data = this.getLangData()
-    const word = data.words[this.currentWordIndex]
+    const items = this.getItems()
+    const currentItem = items[this.currentIndex] || items[0]
+    const nextIndex = (this.currentIndex + 1) % items.length
+    const nextItem = items[nextIndex]
 
-    if (this.prefixEl && this.prefixEl.textContent !== data.prefix) {
-      this.prefixEl.textContent = data.prefix
-    }
-
-    if (this.isDeleting) {
-      if (this.currentCharIndex > 0) {
-        this.currentCharIndex--
-        if (this.textEl) this.textEl.textContent = word.slice(0, this.currentCharIndex)
-        const speed = 35 + Math.random() * 15
+    if (this.phase === 'typing-prefix') {
+      const cur = this.prefixEl ? this.prefixEl.textContent : ''
+      if (cur.length < currentItem.prefix.length) {
+        if (this.prefixEl) {
+          this.prefixEl.textContent = currentItem.prefix.slice(0, cur.length + 1)
+        }
+        const speed = 70 + Math.random() * 20
         this.timeoutId = setTimeout(() => this.tick(), speed)
       } else {
-        this.isDeleting = false
-        this.currentWordIndex = (this.currentWordIndex + 1) % data.words.length
-        this.timeoutId = setTimeout(() => this.tick(), 350)
+        this.phase = 'typing-text'
+        this.timeoutId = setTimeout(() => this.tick(), 50)
       }
-    } else {
-      if (this.currentCharIndex < word.length) {
-        this.currentCharIndex++
-        if (this.textEl) this.textEl.textContent = word.slice(0, this.currentCharIndex)
+    } else if (this.phase === 'typing-text') {
+      const cur = this.textEl ? this.textEl.textContent : ''
+      if (cur.length < currentItem.text.length) {
+        if (this.textEl) {
+          this.textEl.textContent = currentItem.text.slice(0, cur.length + 1)
+        }
         const speed = 65 + Math.random() * 25
         this.timeoutId = setTimeout(() => this.tick(), speed)
       } else {
-        this.isDeleting = true
-        this.timeoutId = setTimeout(() => this.tick(), 1800)
+        this.phase = 'pausing'
+        this.timeoutId = setTimeout(() => {
+          this.phase = 'deleting-text'
+          this.tick()
+        }, 1800)
+      }
+    } else if (this.phase === 'deleting-text') {
+      const cur = this.textEl ? this.textEl.textContent : ''
+      if (cur.length > 0) {
+        if (this.textEl) {
+          this.textEl.textContent = cur.slice(0, -1)
+        }
+        const speed = 35 + Math.random() * 15
+        this.timeoutId = setTimeout(() => this.tick(), speed)
+      } else {
+        if (nextItem.prefix !== currentItem.prefix) {
+          this.phase = 'deleting-prefix'
+          this.timeoutId = setTimeout(() => this.tick(), 50)
+        } else {
+          this.currentIndex = nextIndex
+          this.phase = 'typing-text'
+          this.timeoutId = setTimeout(() => this.tick(), 250)
+        }
+      }
+    } else if (this.phase === 'deleting-prefix') {
+      const cur = this.prefixEl ? this.prefixEl.textContent : ''
+      if (cur.length > 0) {
+        if (this.prefixEl) {
+          this.prefixEl.textContent = cur.slice(0, -1)
+        }
+        const speed = 35 + Math.random() * 15
+        this.timeoutId = setTimeout(() => this.tick(), speed)
+      } else {
+        this.currentIndex = nextIndex
+        this.phase = 'typing-prefix'
+        this.timeoutId = setTimeout(() => this.tick(), 250)
       }
     }
   }
