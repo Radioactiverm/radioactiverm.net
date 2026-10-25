@@ -14,6 +14,7 @@ import { StackManager } from './modules/stack.js'
 import { TerminalManager } from './modules/terminal.js'
 import { ProjectsManager } from './modules/projects.js'
 import { InteractionsManager } from './modules/interactions.js'
+import { TypewriterManager } from './modules/typewriter.js'
 
 const INTERESTS = [
   { icon: 'terminal', label: 'CachyOS' },
@@ -54,11 +55,14 @@ function initApp() {
   try { new MusicPlayer(i18n) } catch {}
   let interactions
   try { interactions = new InteractionsManager(i18n) } catch {}
+  let typewriter
+  try { typewriter = new TypewriterManager(i18n) } catch {}
 
   try { renderInterests() } catch {}
 
   if (i18n) {
     i18n.onChange(() => {
+      try { typewriter?.handleLangChange() } catch {}
       try { projects?.render() } catch {}
       try { stack?.renderFilters() } catch {}
       try { telemetry?.updateClock() } catch {}

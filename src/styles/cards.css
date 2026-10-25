@@ -249,10 +249,41 @@
 
 .profile-tagline {
   max-width: 34ch;
+  min-height: 2.6em;
   font-size: clamp(20px, 2.2vw, 26px);
   font-weight: 650;
   letter-spacing: -0.02em;
   line-height: 1.25;
+}
+
+.typewriter-prefix {
+  color: var(--md-sys-color-on-surface);
+}
+
+.typewriter-text {
+  color: var(--md-sys-color-primary);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--md-sys-color-primary) 30%, transparent);
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 2.5px;
+  height: 1.15em;
+  background-color: var(--md-sys-color-primary);
+  vertical-align: -0.15em;
+  margin-left: 3px;
+  border-radius: 1px;
+  box-shadow: 0 0 8px var(--md-sys-color-primary);
+  animation: typewriter-cursor-blink 850ms steps(2) infinite;
+}
+
+@keyframes typewriter-cursor-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .presence {
