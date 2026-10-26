@@ -34,6 +34,7 @@ export class MusicPlayer {
     this.currentBpm = 120
     this.isDragging = false
     this.dragPercent = null
+    this.wavySize = null
 
     this.init()
   }
@@ -237,6 +238,7 @@ export class MusicPlayer {
 
   setTrackTitle(text) {
     if (this.trackTitle) {
+      delete this.trackTitle.dataset.i18n
       this.trackTitle.textContent = text
     }
   }
@@ -382,9 +384,8 @@ export class MusicPlayer {
   updateWavy(percent) {
     if (!this.wavySvg || !this.wavyActive || !this.wavyTrack || !this.wavyStop) return
 
-    const rect = this.wavySvg.getBoundingClientRect()
-    const width = rect.width || 280
-    const height = rect.height || 28
+    const width = this.wavySize?.width || 280
+    const height = this.wavySize?.height || 28
     const midY = height / 2
 
     const splitX = Math.max(0, Math.min(width, (percent / 100) * width))
@@ -598,7 +599,7 @@ export class MusicPlayer {
       })
     }
 
-    window.addEventListener('resize', () => {
+    const redraw = () => {
       if (this.isDragging && this.dragPercent !== null) {
         this.updateWavy(this.dragPercent)
       } else if (this.audio && this.audio.duration) {
@@ -607,6 +608,17 @@ export class MusicPlayer {
       } else {
         this.updateWavy(0)
       }
-    })
+    }
+
+    if (this.wavySvg && 'ResizeObserver' in window) {
+      new ResizeObserver(entries => {
+        const { width, height } = entries[0].contentRect
+        if (!width || !height) return
+        this.wavySize = { width, height }
+        redraw()
+      }).observe(this.wavySvg)
+    } else {
+      window.addEventListener('resize', redraw)
+    }
   }
 }

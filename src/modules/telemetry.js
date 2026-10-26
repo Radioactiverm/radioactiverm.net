@@ -14,34 +14,7 @@ export class TelemetryManager {
     this.partOfDayText = document.getElementById('part-of-day-text')
     this.timeDiff = document.getElementById('time-diff')
 
-    this.pingChip = document.getElementById('ping-chip')
-    this.pingChipValue = document.getElementById('ping-chip-value')
-    this.cardNetwork = document.getElementById('card-network')
-    this.pingValue = document.getElementById('ping-value')
-    this.pingQualityText = document.getElementById('ping-quality-text')
-    this.sparkLine = document.getElementById('spark-line')
-    this.sparkArea = document.getElementById('spark-area')
-    this.pingMin = document.getElementById('ping-min')
-    this.pingAvg = document.getElementById('ping-avg')
-    this.pingMax = document.getElementById('ping-max')
-    this.pingJitter = document.getElementById('ping-jitter')
-
-    this.history = []
-    this.maxHistory = 24
-
-    this.startClock()
-    this.startPing()
-  }
-
-  startClock() {
-    this.updateClock()
-    setInterval(() => this.updateClock(), 1000)
-  }
-
-  updateClock() {
-    const now = new Date()
-
-    const pragueFormatter = new Intl.DateTimeFormat('en-GB', {
+    this.pragueFormatter = new Intl.DateTimeFormat('en-GB', {
       timeZone: 'Europe/Prague',
       hour12: false,
       year: 'numeric',
@@ -52,8 +25,24 @@ export class TelemetryManager {
       second: '2-digit',
       timeZoneName: 'short'
     })
+    this.offsetFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Europe/Prague',
+      timeZoneName: 'longOffset'
+    })
+    this.dateFormatters = {}
 
-    const parts = pragueFormatter.formatToParts(now).reduce((acc, part) => {
+    this.startClock()
+  }
+
+  startClock() {
+    this.updateClock()
+    setInterval(() => this.updateClock(), 1000)
+  }
+
+  updateClock() {
+    const now = new Date()
+
+    const parts = this.pragueFormatter.formatToParts(now).reduce((acc, part) => {
       acc[part.type] = part.value
       return acc
     }, {})
@@ -69,12 +58,16 @@ export class TelemetryManager {
     if (this.clockSec) this.clockSec.textContent = ss
 
     const currentLang = this.i18n ? this.i18n.currentLang : 'en'
-    const dateFormatter = new Intl.DateTimeFormat(currentLang === 'cs' ? 'cs-CZ' : 'en-US', {
-      timeZone: 'Europe/Prague',
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric'
-    })
+    const dateLocale = currentLang === 'cs' ? 'cs-CZ' : 'en-US'
+    if (!this.dateFormatters[dateLocale]) {
+      this.dateFormatters[dateLocale] = new Intl.DateTimeFormat(dateLocale, {
+        timeZone: 'Europe/Prague',
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+      })
+    }
+    const dateFormatter = this.dateFormatters[dateLocale]
     if (this.clockDate) this.clockDate.textContent = dateFormatter.format(now)
 
     const hourNum = parseInt(hh, 10)
@@ -113,22 +106,15 @@ export class TelemetryManager {
       this.partOfDayText.textContent = this.i18n.t(partKey)
     }
 
-    const pragueOffsetString = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'Europe/Prague',
-      timeZoneName: 'longOffset'
-    })
-      .format(now)
-      .split(' ')
-      .pop()
+    const pragueOffsetString = this.offsetFormatter.format(now).split(' ').pop()
 
     if (this.timeZoneTag) {
       this.timeZoneTag.textContent = `${tzName} · ${pragueOffsetString}`
     }
 
     const visitorOffsetMin = -now.getTimezoneOffset()
-    const pragueNow = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Prague' }))
-    const utcNow = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }))
-    const pragueOffsetMin = Math.round((pragueNow.getTime() - utcNow.getTime()) / 60000)
+    const offsetMatch = pragueOffsetString.match(/([+-])(\d{2}):(\d{2})/)
+    const pragueOffsetMin = offsetMatch ? (offsetMatch[1] === '-' ? -1 : 1) * (Number(offsetMatch[2]) * 60 + Number(offsetMatch[3])) : 0
     const diffHours = Math.round((pragueOffsetMin - visitorOffsetMin) / 60)
 
     if (this.timeDiff && this.i18n) {
@@ -140,112 +126,5 @@ export class TelemetryManager {
         this.timeDiff.textContent = `${Math.abs(diffHours)}h ${this.i18n.t('time.behind')}`
       }
     }
-  }
-
-  async measurePing() {
-    const start = performance.now()
-    try {
-      const response = await fetch('/favicon.svg', {
-        method: 'GET',
-        cache: 'no-cache'
-      })
-      if (!response.ok) throw new Error('ping error')
-      const latency = Math.max(1, Math.round(performance.now() - start))
-      this.recordLatency(latency)
-    } catch {
-      this.recordLatency(null)
-    }
-  }
-
-  recordLatency(val) {
-    if (val !== null) {
-      this.history.push(val)
-      if (this.history.length > this.maxHistory) {
-        this.history.shift()
-      }
-    }
-
-    const count = this.history.length
-    if (count === 0 || val === null) {
-      this.updateQuality('offline', '--')
-      return
-    }
-
-    const latest = this.history[count - 1]
-    const min = Math.min(...this.history)
-    const max = Math.max(...this.history)
-    const sum = this.history.reduce((a, b) => a + b, 0)
-    const avg = Math.round(sum / count)
-
-    let jitter = 0
-    if (count > 1) {
-      let diffSum = 0
-      for (let i = 1; i < count; i++) {
-        diffSum += Math.abs(this.history[i] - this.history[i - 1])
-      }
-      jitter = Math.round(diffSum / (count - 1))
-    }
-
-    let quality = 'good'
-    if (latest > 180) quality = 'poor'
-    else if (latest > 85) quality = 'fair'
-
-    this.updateQuality(quality, latest)
-
-    if (this.pingMin) this.pingMin.textContent = `${min}ms`
-    if (this.pingAvg) this.pingAvg.textContent = `${avg}ms`
-    if (this.pingMax) this.pingMax.textContent = `${max}ms`
-    if (this.pingJitter) this.pingJitter.textContent = `${jitter}ms`
-
-    this.renderSparkline()
-  }
-
-  updateQuality(quality, value) {
-    if (this.pingChip) this.pingChip.dataset.quality = quality
-    if (this.pingChipValue) this.pingChipValue.textContent = typeof value === 'number' ? `${value} ms` : value
-    if (this.cardNetwork) this.cardNetwork.dataset.quality = quality
-    if (this.pingValue) this.pingValue.textContent = value.toString()
-    if (this.pingQualityText && this.i18n) {
-      const key = `ping.${quality}`
-      this.pingQualityText.textContent = this.i18n.t(key) || quality
-    }
-  }
-
-  renderSparkline() {
-    if (!this.sparkLine || !this.sparkArea || this.history.length < 2) return
-
-    const w = 300
-    const h = 64
-    const padY = 8
-    const values = this.history
-    const minVal = Math.min(...values)
-    const maxVal = Math.max(...values, minVal + 10)
-    const range = maxVal - minVal || 1
-
-    const points = values.map((v, i) => {
-      const x = Math.round((i / (values.length - 1)) * w)
-      const y = Math.round(h - padY - ((v - minVal) / range) * (h - padY * 2))
-      return { x, y }
-    })
-
-    const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
-    const areaPath = `${linePath} L ${w} ${h} L 0 ${h} Z`
-
-    this.sparkLine.setAttribute('d', linePath)
-    this.sparkArea.setAttribute('d', areaPath)
-  }
-
-  startPing() {
-    this.measurePing()
-    setInterval(() => {
-      if (!document.hidden) {
-        this.measurePing()
-      }
-    }, 10000)
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        this.measurePing()
-      }
-    })
   }
 }

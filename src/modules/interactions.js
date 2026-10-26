@@ -96,15 +96,19 @@ export class InteractionsManager {
 
   initTopBarScroll() {
     if (!this.topBar) return
-    const update = () => {
-      if (window.scrollY > 16) {
-        this.topBar.classList.add('is-scrolled')
-      } else {
-        this.topBar.classList.remove('is-scrolled')
-      }
+    if (!('IntersectionObserver' in window)) {
+      const update = () => this.topBar.classList.toggle('is-scrolled', window.scrollY > 16)
+      window.addEventListener('scroll', update, { passive: true })
+      requestAnimationFrame(update)
+      return
     }
-    window.addEventListener('scroll', update, { passive: true })
-    update()
+    const sentinel = document.createElement('div')
+    sentinel.className = 'scroll-sentinel'
+    sentinel.setAttribute('aria-hidden', 'true')
+    document.body.prepend(sentinel)
+    new IntersectionObserver(([entry]) => {
+      this.topBar.classList.toggle('is-scrolled', !entry.isIntersecting)
+    }).observe(sentinel)
   }
 
   initCopyButtons() {

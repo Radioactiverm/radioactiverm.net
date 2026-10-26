@@ -1,3 +1,4 @@
+import './styles/fonts.css'
 import './styles/tokens.css'
 import './styles/base.css'
 import './styles/components.css'
@@ -39,6 +40,15 @@ function renderInterests() {
   ).join('')
 }
 
+function afterFirstPaint(tasks) {
+  const schedule = () => tasks.forEach(task => setTimeout(() => { try { task() } catch {} }, 0))
+  if (document.hidden) {
+    schedule()
+  } else {
+    requestAnimationFrame(schedule)
+  }
+}
+
 function initApp() {
   let i18n
   try { i18n = new I18nManager() } catch {}
@@ -50,15 +60,18 @@ function initApp() {
   try { new TerminalManager() } catch {}
   let telemetry
   try { telemetry = new TelemetryManager(i18n) } catch {}
-  try { new GitHubManager(i18n) } catch {}
-  try { new LanyardManager(i18n) } catch {}
-  try { new MusicPlayer(i18n) } catch {}
-  let interactions
-  try { interactions = new InteractionsManager(i18n) } catch {}
   let typewriter
   try { typewriter = new TypewriterManager(i18n) } catch {}
 
   try { renderInterests() } catch {}
+
+  let interactions
+  afterFirstPaint([
+    () => { interactions = new InteractionsManager(i18n) },
+    () => new LanyardManager(i18n),
+    () => new GitHubManager(i18n),
+    () => new MusicPlayer(i18n)
+  ])
 
   if (i18n) {
     i18n.onChange(() => {

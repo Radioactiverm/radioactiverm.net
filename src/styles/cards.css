@@ -22,7 +22,7 @@
   --span-md: 3;
 }
 
-.card-network {
+.card-shows {
   --span: 5;
   --span-md: 3;
 }
@@ -482,97 +482,104 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
-.card-network {
-  --quality-color: var(--md-sys-color-outline);
-}
-
-.card-network[data-quality='good'] {
-  --quality-color: var(--md-sys-color-primary);
-}
-
-.card-network[data-quality='fair'] {
-  --quality-color: var(--md-sys-color-warning);
-}
-
-.card-network[data-quality='poor'],
-.card-network[data-quality='offline'] {
-  --quality-color: var(--md-sys-color-error);
-}
-
-.ping-readout {
+.show-list {
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
   gap: 6px;
 }
 
-.ping-value {
-  font-size: clamp(48px, 6vw, 72px);
-  font-weight: 600;
-  letter-spacing: -0.06em;
-  line-height: 0.9;
-  font-variant-numeric: tabular-nums;
-  color: var(--md-sys-color-on-surface);
-}
-
-.ping-unit {
-  font-size: 18px;
-  font-weight: 500;
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.ping-quality {
-  margin-left: auto;
-  align-self: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.ping-quality .dot {
-  color: var(--quality-color);
-}
-
-.sparkline {
-  width: 100%;
-  height: 64px;
-  color: var(--quality-color);
-  overflow: visible;
-  transition: color var(--dur-medium) var(--ease-standard);
-}
-
-.spark-line {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.ping-stats {
+.show {
+  --tile-bg: var(--md-sys-color-primary-container);
+  --tile-fg: var(--md-sys-color-on-primary-container);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-top: auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 8px 8px;
+  border-radius: var(--shape-lg);
+  background: var(--md-sys-color-surface-container-low);
+  opacity: 0;
+  transform: translateX(-10px);
+  transition:
+    border-radius 400ms cubic-bezier(0.2, 0, 0, 1),
+    background-color var(--dur-short) var(--ease-standard),
+    opacity var(--dur-long) var(--ease-emphasized-decel) calc(200ms + var(--si, 0) * 70ms),
+    transform var(--dur-long) var(--ease-spring) calc(200ms + var(--si, 0) * 70ms);
 }
 
-.ping-stats div {
-  padding: 8px 10px;
+.card-shows.is-visible .show {
+  opacity: 1;
+  transform: none;
+}
+
+.card-shows.is-visible .show:hover {
   border-radius: var(--shape-md);
   background: var(--md-sys-color-surface-container-highest);
+  transform: translateX(4px);
+  transition-delay: 0ms;
 }
 
-.ping-stats dt {
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.show[data-kind='anime'] {
+  --tile-bg: var(--md-sys-color-tertiary-container);
+  --tile-fg: var(--md-sys-color-on-tertiary-container);
+}
+
+.show[data-kind='film'] {
+  --tile-bg: var(--md-sys-color-secondary-container);
+  --tile-fg: var(--md-sys-color-on-secondary-container);
+}
+
+.show-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--shape-sm);
+  background: var(--tile-bg);
+  color: var(--tile-fg);
+  transition: border-radius 450ms cubic-bezier(0.2, 0, 0, 1), transform 450ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.show-icon .ms {
+  font-size: 20px;
+}
+
+.show:hover .show-icon {
+  border-radius: 50%;
+  transform: rotate(-8deg);
+}
+
+.show:hover .show-icon .ms {
+  --ms-fill: 1;
+}
+
+.show-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.show-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.show-meta {
+  font-size: 11.5px;
   color: var(--md-sys-color-on-surface-variant);
 }
 
-.ping-stats dd {
-  font-size: 15px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+.show-kind {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--shape-full);
+  background: var(--tile-bg);
+  color: var(--tile-fg);
 }
 
 .player-body {
@@ -1699,5 +1706,10 @@
   .avatar-ring,
   .cover {
     animation: none;
+  }
+
+  .show {
+    opacity: 1;
+    transform: none;
   }
 }

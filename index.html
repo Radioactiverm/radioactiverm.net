@@ -21,14 +21,13 @@
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Radioactiverm" />
     <meta name="twitter:description" content="Homelab, hardware and web — automation, apps and websites from the Czech Republic." />
+    <link rel="preload" href="/src/assets/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/src/assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://api.lanyard.rest" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" media="print" onload="this.media='all'" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&amp;display=swap" media="print" onload="this.media='all'" />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0..1,0&amp;display=swap" />
     </noscript>
     <script type="application/ld+json">
@@ -95,10 +94,6 @@
             <span class="mono" id="clock-chip-time">--:--:--</span>
             <span class="mono telemetry-dim" id="clock-chip-zone">CET</span>
           </a>
-          <a class="telemetry-chip ping-chip" id="ping-chip" href="#card-network" data-quality="unknown">
-            <span class="dot dot-live" aria-hidden="true"></span>
-            <span class="mono" id="ping-chip-value">-- ms</span>
-          </a>
         </div>
 
         <div class="top-actions">
@@ -145,7 +140,7 @@
               <defs><path id="avatar-ring-path" d="M100,100 m-84,0 a84,84 0 1,1 168,0 a84,84 0 1,1 -168,0" /></defs>
               <text><textPath href="#avatar-ring-path" textLength="520" lengthAdjust="spacing">RADIOACTIVERM · HOMELAB · HARDWARE · WEB · AUTOMATION · </textPath></text>
             </svg>
-            <img class="avatar" id="avatar" src="https://avatars.githubusercontent.com/u/76690913?s=240&amp;v=4" alt="Radioactiverm" width="160" height="160" fetchpriority="high" decoding="async" />
+            <img class="avatar" id="avatar" src="https://cdn.discordapp.com/avatars/634485482658725890/d67b828fa9a01318b096120aca69b1fd.webp?size=256" crossorigin="anonymous" onerror="this.onerror=null;this.src='https://avatars.githubusercontent.com/u/76690913?s=240&amp;v=4'" alt="Radioactiverm" width="160" height="160" fetchpriority="high" decoding="async" />
             <span class="avatar-status" id="avatar-status" aria-hidden="true"></span>
           </div>
           <div class="profile-id">
@@ -215,32 +210,53 @@
         </div>
       </article>
 
-      <article class="card card-network reveal" id="card-network" style="--i: 2" data-quality="unknown" aria-labelledby="network-title">
+      <article class="card card-shows reveal" id="card-shows" style="--i: 2" aria-labelledby="shows-title">
         <div class="card-head">
-          <h2 class="card-label" id="network-title"><span class="ms" aria-hidden="true">network_ping</span><span data-i18n="ping.title">Latency</span></h2>
-          <span class="tag mono" id="ping-target">GET /favicon.svg</span>
+          <h2 class="card-label" id="shows-title"><span class="ms" aria-hidden="true">live_tv</span><span data-i18n="shows.title">Favorite shows</span></h2>
+          <span class="tag mono">05</span>
         </div>
-        <div class="ping-readout">
-          <span class="ping-value mono" id="ping-value">--</span>
-          <span class="ping-unit mono">ms</span>
-          <span class="ping-quality chip" id="ping-quality"><span class="dot" aria-hidden="true"></span><span id="ping-quality-text" data-i18n="ping.measuring">measuring</span></span>
-        </div>
-        <svg class="sparkline" id="sparkline" viewBox="0 0 300 64" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="spark-gradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="currentColor" stop-opacity="0.35" />
-              <stop offset="100%" stop-color="currentColor" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-          <path class="spark-area" id="spark-area" d="" fill="url(#spark-gradient)" />
-          <path class="spark-line" id="spark-line" d="" />
-        </svg>
-        <dl class="ping-stats mono">
-          <div><dt>min</dt><dd id="ping-min">--</dd></div>
-          <div><dt>avg</dt><dd id="ping-avg">--</dd></div>
-          <div><dt>max</dt><dd id="ping-max">--</dd></div>
-          <div><dt>jitter</dt><dd id="ping-jitter">--</dd></div>
-        </dl>
+        <ul class="show-list">
+          <li class="show" data-kind="series" style="--si: 0">
+            <span class="show-icon"><span class="ms" aria-hidden="true">terminal</span></span>
+            <span class="show-text">
+              <span class="show-title">Mr. Robot</span>
+              <span class="show-meta mono">2015–2019</span>
+            </span>
+            <span class="show-kind mono" data-i18n="shows.series">series</span>
+          </li>
+          <li class="show" data-kind="anime" style="--si: 1">
+            <span class="show-icon"><span class="ms" aria-hidden="true">edit_note</span></span>
+            <span class="show-text">
+              <span class="show-title">Death Note</span>
+              <span class="show-meta mono">2006–2007</span>
+            </span>
+            <span class="show-kind mono" data-i18n="shows.anime">anime</span>
+          </li>
+          <li class="show" data-kind="film" style="--si: 2">
+            <span class="show-icon"><span class="ms" aria-hidden="true">sports_mma</span></span>
+            <span class="show-text">
+              <span class="show-title">Fight Club</span>
+              <span class="show-meta mono">1999</span>
+            </span>
+            <span class="show-kind mono" data-i18n="shows.film">film</span>
+          </li>
+          <li class="show" data-kind="series" style="--si: 3">
+            <span class="show-icon"><span class="ms" aria-hidden="true">water_drop</span></span>
+            <span class="show-text">
+              <span class="show-title">Dexter</span>
+              <span class="show-meta mono">2006–2013</span>
+            </span>
+            <span class="show-kind mono" data-i18n="shows.series">series</span>
+          </li>
+          <li class="show" data-kind="series" style="--si: 4">
+            <span class="show-icon"><span class="ms" aria-hidden="true">science</span></span>
+            <span class="show-text">
+              <span class="show-title">Breaking Bad</span>
+              <span class="show-meta mono">2008–2013</span>
+            </span>
+            <span class="show-kind mono" data-i18n="shows.series">series</span>
+          </li>
+        </ul>
       </article>
 
       <article class="card card-player reveal" id="card-player" style="--i: 3" data-state="idle" aria-labelledby="player-title">
@@ -251,7 +267,7 @@
         <div class="player-body">
           <div class="cover" id="cover">
             <span class="ms cover-icon" aria-hidden="true">music_note</span>
-            <img class="cover-img" id="cover-img" alt="" hidden />
+            <img class="cover-img" id="cover-img" alt="" width="92" height="92" loading="lazy" decoding="async" hidden />
           </div>
           <div class="track-meta">
             <p class="track-title" id="track-title" data-i18n="player.loading">Loading playlist…</p>

@@ -128,8 +128,12 @@ export class LanyardManager {
     const status = data.discord_status || 'offline'
 
     if (this.avatar && user.avatar) {
-      const ext = user.avatar.startsWith('a_') ? 'gif' : 'png'
-      this.avatar.src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${user.avatar}.${ext}?size=128`
+      const ext = user.avatar.startsWith('a_') ? 'gif' : 'webp'
+      const src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${user.avatar}.${ext}?size=256`
+      if (this.avatar.src !== src) {
+        this.avatar.crossOrigin = 'anonymous'
+        this.avatar.src = src
+      }
     }
 
     if (this.avatarStage) {

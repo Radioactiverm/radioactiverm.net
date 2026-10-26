@@ -7,6 +7,16 @@
   transition: background-color var(--dur-medium) var(--ease-standard), box-shadow var(--dur-medium) var(--ease-standard);
 }
 
+.scroll-sentinel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 17px;
+  pointer-events: none;
+  visibility: hidden;
+}
+
 .top-bar.is-scrolled {
   background: color-mix(in srgb, var(--md-sys-color-surface-dim) 78%, transparent);
   backdrop-filter: blur(18px) saturate(1.4);
@@ -101,28 +111,6 @@
 .telemetry-dim {
   color: var(--md-sys-color-on-surface-variant);
   font-weight: 500;
-}
-
-.ping-chip {
-  color: var(--md-sys-color-on-surface);
-}
-
-.ping-chip .dot {
-  color: var(--md-sys-color-outline);
-  transition: color var(--dur-medium) var(--ease-standard);
-}
-
-[data-quality='good'] .dot {
-  color: var(--md-sys-color-success);
-}
-
-[data-quality='fair'] .dot {
-  color: var(--md-sys-color-warning);
-}
-
-[data-quality='poor'] .dot,
-[data-quality='offline'] .dot {
-  color: var(--md-sys-color-error);
 }
 
 .top-actions {
@@ -365,6 +353,17 @@
     opacity var(--dur-xlong) var(--ease-emphasized-decel) calc(var(--i, 0) * 70ms);
 }
 
+.bento > .card:not(.card-profile),
+.projects-grid > .card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 420px;
+}
+
+.bento > .card-stack,
+.bento > .card-homelab {
+  contain-intrinsic-size: auto 600px;
+}
+
 .card-head {
   display: flex;
   align-items: center;
@@ -484,8 +483,7 @@
 }
 
 @media (max-width: 860px) {
-  .telemetry-dim,
-  .ping-chip-label {
+  .telemetry-dim {
     display: none;
   }
 }
@@ -503,6 +501,10 @@
 
   .bento {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bento > .card-stack {
+    contain-intrinsic-size: auto 1300px;
   }
 
   .card {
