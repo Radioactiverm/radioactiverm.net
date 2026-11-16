@@ -2,12 +2,14 @@ import { terminalCommand, homelabNodes, homelabSummary } from '../data/homelab.j
 
 export class TerminalManager {
   constructor() {
+    this.cardEl = document.getElementById('card-homelab')
     this.cmdEl = document.getElementById('term-cmd')
     this.nodeListEl = document.getElementById('node-list')
     this.footEl = document.getElementById('term-foot')
+    this.started = false
 
     this.renderNodes()
-    this.startTypewriter()
+    this.startWhenVisible()
   }
 
   renderNodes() {
@@ -20,7 +22,7 @@ export class TerminalManager {
           <span class="node-icon"><span class="ms" aria-hidden="true">${node.icon}</span></span>
           <div class="node-main">
             <span class="node-name">${node.name}</span>
-            <span class="node-role">${node.role}</span>
+            <span class="node-role" title="${node.role}">${node.role}</span>
           </div>
           <span class="node-kind mono" data-kind="${node.kind}">${node.kind}</span>
         </li>
@@ -29,8 +31,42 @@ export class TerminalManager {
       .join('')
   }
 
+  startWhenVisible() {
+    const target = this.cardEl || this.nodeListEl
+    if (!target || typeof IntersectionObserver === 'undefined') {
+      this.start()
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (!entries.some(entry => entry.isIntersecting)) return
+        observer.disconnect()
+        this.start()
+      },
+      { threshold: 0.15 }
+    )
+    observer.observe(target)
+  }
+
+  start() {
+    if (this.started) return
+    this.started = true
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (this.cmdEl) this.cmdEl.textContent = terminalCommand
+      this.revealNodes(0)
+      return
+    }
+
+    this.startTypewriter()
+  }
+
   startTypewriter() {
-    if (!this.cmdEl) return
+    if (!this.cmdEl) {
+      this.revealNodes()
+      return
+    }
 
     let i = 0
     const text = terminalCommand
@@ -49,19 +85,19 @@ export class TerminalManager {
     setTimeout(type, 400)
   }
 
-  revealNodes() {
+  revealNodes(step = 60) {
     if (!this.nodeListEl) return
     const nodes = this.nodeListEl.querySelectorAll('.node')
     nodes.forEach((node, idx) => {
       setTimeout(() => {
         node.classList.add('is-shown')
-      }, idx * 60)
+      }, idx * step)
     })
 
     if (this.footEl) {
       setTimeout(() => {
         this.footEl.textContent = homelabSummary
-      }, nodes.length * 60 + 100)
+      }, nodes.length * step + (step ? 100 : 0))
     }
   }
 }

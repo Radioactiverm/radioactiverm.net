@@ -18,44 +18,58 @@ export const stackItems = [
   {
     id: 'proxmox',
     name: 'Proxmox VE',
-    desc: 'Type-1 hypervisor cluster & ZFS',
+    desc: 'Two hypervisor nodes & LXC containers',
     cat: 'homelab',
     icon: 'dns'
   },
   {
-    id: 'truenas',
-    name: 'TrueNAS Scale',
-    desc: 'Network attached storage & pools',
-    cat: 'homelab',
-    icon: 'storage'
-  },
-  {
-    id: 'pfsense',
-    name: 'pfSense Router',
-    desc: 'Edge routing, firewall & NAT',
-    cat: 'homelab',
-    icon: 'router'
-  },
-  {
     id: 'homeassistant',
     name: 'Home Assistant',
-    desc: 'Smart home ecosystem automation',
+    desc: 'Smart home on a Raspberry Pi',
     cat: 'homelab',
     icon: 'home_iot_device'
   },
   {
+    id: 'cloudflare-tunnel',
+    name: 'Cloudflare Tunnel',
+    desc: 'Public ingress for self-hosted sites',
+    cat: 'homelab',
+    icon: 'cloud'
+  },
+  {
+    id: 'tailscale',
+    name: 'Tailscale',
+    desc: 'Remote access to the home LAN',
+    cat: 'homelab',
+    icon: 'vpn_lock'
+  },
+  {
+    id: 'pterodactyl',
+    name: 'Pterodactyl',
+    desc: 'Game server panel & Wings nodes',
+    cat: 'homelab',
+    icon: 'sports_esports'
+  },
+  {
     id: 'docker',
-    name: 'Docker & Compose',
-    desc: 'Containerized production services',
+    name: 'Docker',
+    desc: 'Container runtime for game servers',
     cat: 'homelab',
     icon: 'deployed_code'
   },
   {
-    id: 'nextcloud',
-    name: 'Nextcloud Hub',
-    desc: 'Self-hosted cloud productivity',
+    id: 'immich',
+    name: 'Immich',
+    desc: 'Self-hosted photo library',
     cat: 'homelab',
-    icon: 'cloud'
+    icon: 'photo_library'
+  },
+  {
+    id: 'adguard',
+    name: 'AdGuard Home',
+    desc: 'Network-wide DNS ad-blocking',
+    cat: 'homelab',
+    icon: 'shield'
   },
   {
     id: 'esp32',
@@ -79,11 +93,25 @@ export const stackItems = [
     icon: 'lightbulb'
   },
   {
-    id: 'networking',
-    name: 'Networking & VLANs',
-    desc: 'Managed switches & WireGuard VPN',
+    id: 'zigbee',
+    name: 'Zigbee2MQTT',
+    desc: 'Zigbee sensors, plugs & switches',
     cat: 'hardware',
     icon: 'hub'
+  },
+  {
+    id: 'octoprint',
+    name: 'OctoPrint & 3D Printing',
+    desc: 'Ender 3 V2 driven from a Raspberry Pi',
+    cat: 'hardware',
+    icon: 'print'
+  },
+  {
+    id: 'networking',
+    name: 'Home Networking',
+    desc: 'Wi-Fi 6 router, wired backbone & DNS',
+    cat: 'hardware',
+    icon: 'router'
   },
   {
     id: 'electrical',

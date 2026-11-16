@@ -33,9 +33,9 @@ export const projects = [
   {
     id: 'homelab',
     title: 'Proxmox & Home Assistant Lab',
-    desc: 'Clustered Proxmox VE hypervisor, TrueNAS storage pools, pfSense firewall, Zigbee coordinator, and Home Assistant automation core for the entire residence.',
-    descCs: 'Cluster hypervizorů Proxmox VE, disková pole TrueNAS, firewall pfSense, koordinátor Zigbee a řídicí centrum Home Assistant pro celou domácnost.',
-    tags: ['Proxmox VE', 'Home Assistant', 'pfSense', 'ZFS', 'Zigbee'],
+    desc: 'Two Proxmox VE nodes running LXC containers for my sites, Pterodactyl game servers and Immich, published through Cloudflare Tunnel. Home Assistant, Zigbee2MQTT and AdGuard Home run on a Raspberry Pi.',
+    descCs: 'Dva uzly Proxmox VE s LXC kontejnery pro moje weby, herní servery Pterodactyl a Immich, zveřejněné přes Cloudflare Tunnel. Home Assistant, Zigbee2MQTT a AdGuard Home běží na Raspberry Pi.',
+    tags: ['Proxmox VE', 'Home Assistant', 'Cloudflare Tunnel', 'Pterodactyl', 'Zigbee'],
     liveUrl: 'https://radioactiverm.net',
     repoUrl: 'https://github.com/Radioactiverm',
     tone: '',
